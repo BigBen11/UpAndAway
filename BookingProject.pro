@@ -10,22 +10,28 @@ CONFIG += c++17
 
 SOURCES += \
     booking.cpp \
+    customer.cpp \
     errorwindow.cpp \
     flightbooking.cpp \
     hotelbooking.cpp \
     main.cpp \
     mainwindow.cpp \
     rentalcarreservation.cpp \
-    travelagency.cpp
+    travel.cpp \
+    travelagency.cpp \
+    travelagencyui.cpp
 
 HEADERS += \
     booking.h \
+    customer.h \
     errorwindow.h \
     flightbooking.h \
     hotelbooking.h \
     mainwindow.h \
     rentalcarreservation.h \
-    travelagency.h
+    travel.h \
+    travelagency.h \
+    travelagencyui.h
 
 FORMS += \
     errorwindow.ui \
@@ -37,4 +43,5 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 DISTFILES += \
+    ../../../Users/User/Desktop/bookingsPraktikum3.json \
     ../../Users/User/Desktop/bookingsPraktikum2.json

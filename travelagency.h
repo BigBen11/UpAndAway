@@ -10,7 +10,7 @@
 #include "flightbooking.h"
 #include "hotelbooking.h"
 #include "rentalcarreservation.h"
-
+#include "customer.h"
 
 
 class TravelAgency
@@ -22,16 +22,30 @@ public:
 
     std::string getInfo();
 
+
     void addBooking(Booking* pBooking);
+
+    void addTraevel(Travel* travel);
+
+    void addCustomer(Customer* customer);
+
 
     std::vector<Booking*> getBookings();
 
-    Booking* getBooking(std::string id);
+
+    Booking* findBooking(std::string id);
+
+    Travel* findTravel(int id);
+
+    Customer* findCustomer(int id);
+
 
     ~TravelAgency();
 
 private:
-    std::vector<Booking*> bookings;
+    std::vector<Booking*> allBookings;
+    std::vector<Customer*> allCustomers;
+    std::vector<Travel*> allTravels;
 };
 
 #endif // TRAVELAGENCY_H

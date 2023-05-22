@@ -7,28 +7,37 @@ TravelAgency::TravelAgency()
 
 TravelAgency::~TravelAgency()
 {
-    for (auto booking: bookings) {
+    for (auto booking: allBookings) {
         delete booking;
     }
-    bookings.clear();
+    for(auto travel: allTravels){
+        delete travel;
+    }
+    for(auto customer: allCustomers){
+        delete customer;
+    }
 }
 
 std::vector<Booking*> TravelAgency::getBookings(){
-    return bookings;
+    return allBookings;
 }
 
 void TravelAgency::addBooking(Booking* pBooking){
-    bookings.push_back(pBooking);
+    allBookings.push_back(pBooking);
 }
 
-Booking* TravelAgency::getBooking(std::string id){
-    for(auto booking: bookings){
-        if(id == booking->getId()){
-            return booking;
-        }
-    }
-    return NULL;
+void TravelAgency::addTraevel(Travel* travel){
+    allTravels.push_back(travel);
 }
+
+void TravelAgency::addCustomer(Customer* customer){
+    allCustomers.push_back(customer);
+}
+
+
+
+
+
 
 void chekJsonObjekt(std::string const attributName, nlohmann::json const fileJson, int const objectNumber){
     if(fileJson.find(attributName) == fileJson.end() || fileJson[attributName].get<std::string>().empty()) {
@@ -49,9 +58,27 @@ void chekJsonObjektFlight(std::string attributName, nlohmann::json fileJson, int
     }
 }
 
+bool isTravelIdExistent(std::vector<int> travelIdAll, nlohmann::json object){
+    for(auto travelId: travelIdAll){
+        if(object["travelId"] == travelId){
+            return true;
+        }
+    }
+    return false;
+}
+
+bool isCustomerIdExistent(std::vector<int> customerIdAll, nlohmann::json object){
+    for(auto customerId: customerIdAll){
+        if(object["customerId"] == customerId){
+            return true;
+        }
+    }
+    return false;
+}
+
+
 
 void TravelAgency::readFile(std::string filePath){
-
 
         nlohmann::json fileJson;
 
@@ -95,49 +122,73 @@ void TravelAgency::readFile(std::string filePath){
 
 
 
-        for(int i = 0; i < 87; i++){
-           if(fileJson[i]["type"] == "Flight"){
-                Booking* pFlightBooking = new FlightBooking(fileJson[i]["type"], fileJson[i]["fromDest"], fileJson[i]["toDest"],
-                        fileJson[i]["airline"], fileJson[i]["id"], fileJson[i]["price"],
-                        fileJson[i]["fromDate"], fileJson[i]["toDate"], fileJson[i]["bookingClass"]);
+        std::vector<Booking*> travelBookings;
+        std::vector<Travel*> customerTravels;
+
+        std::vector<int> travelIdAll;
+
+        std::vector<int> customerIdAll;
+
+
+        std::vector<Booking*> tmpTravelBookings;
+        std::vector<Travel*> tmpTravelList;
+
+
+
+        for (auto object : fileJson) {
+            /*Speichern von Bookings*/
+            if (object["type"] == "Flight") {
+                Booking* pFlightBooking = new FlightBooking(object["type"], object["fromDest"], object["toDest"],
+                    object["airline"], object["id"], object["price"],
+                    object["fromDate"], object["toDate"], object["bookingClass"]);
+
                 this->addBooking(pFlightBooking);
 
-           }else if(fileJson[i]["type"] == "RentalCar"){
-               Booking* pRentalCarReservation = new RentalCarReservation(fileJson[i]["type"], fileJson[i]["pickupLocation"], fileJson[i]["returnLocation"],
-                       fileJson[i]["company"], fileJson[i]["id"], fileJson[i]["price"],
-                       fileJson[i]["fromDate"], fileJson[i]["toDate"], fileJson[i]["vehicleClass"]);
-               this->addBooking(pRentalCarReservation);
+            } else if (object["type"] == "RentalCar") {
+                Booking* pRentalCarReservation = new RentalCarReservation(object["type"], object["pickupLocation"], object["returnLocation"],
+                    object["company"], object["id"], object["price"],
+                    object["fromDate"], object["toDate"], object["vehicleClass"]);
 
-           }else if(fileJson[i]["type"] == "Hotel"){
-                Booking* pHotelBooking = new HotelBooking(fileJson[i]["type"], fileJson[i]["hotel"], fileJson[i]["town"],
-                        fileJson[i]["id"], fileJson[i]["price"],fileJson[i]["fromDate"], fileJson[i]["toDate"], fileJson[i]["roomType"]);
+                this->addBooking(pRentalCarReservation);
+
+            } else if (object["type"] == "Hotel") {
+                Booking* pHotelBooking = new HotelBooking(object["type"], object["hotel"], object["town"],
+                    object["id"], object["price"], object["fromDate"], object["toDate"], object["roomType"]);
+
                 this->addBooking(pHotelBooking);
-           }
+            }
+
+            /*Speichern von Travels*/
+            tmpTravelBookings.clear();
+            for (auto tmpObject : fileJson){
+                if(tmpObject["travelId"] == object["travelId"]){
+                    tmpTravelBookings.push_back(this->allBookings.back());
+                }
+            }
+            if(!this->findTravel(object["travelId"])){
+                Travel* pTravel = new Travel(object["travelId"], object["customerId"], tmpTravelBookings);
+                allTravels.push_back(pTravel);
+            }
+
+            /*Speichern von Customers*/
+            tmpTravelList.clear();
+            for (auto travel: allTravels){
+                if(travel->getCustomerId() == object["customerId"]){
+                    tmpTravelList.push_back(travel);
+                }
+            }
+            if(!this->findCustomer(object["customerId"])){
+                Customer* pCustomer = new Customer(object["customerId"], object["customerName"], tmpTravelList);
+                allCustomers.push_back(pCustomer);
+
+            }
         }
+
 
         fileInput.close();
-
-
-    /*catch (std::exception& e) {
-        std::cout << e.what() << std::endl << "Haben Sie die Datei korrigiert? (j/n)\n";
-
-        char isFileCorrected;
-        std::cin >> isFileCorrected;
-
-        if(isFileCorrected == 'j'){
-            std::cout << "Dann noch mal...\n";
-
-        }else if(isFileCorrected == 'n'){
-            std::cout << "Tschuess dann :(\n";
-            exit(1);
-        }else{
-            std::cout << "Falsche Eingabe!\n";
-        }
-
-
-    }*/
-
 }
+
+
 
 std::string TravelAgency::getInfo(){
     int cnt_FlightBookings = 0;
@@ -148,9 +199,7 @@ std::string TravelAgency::getInfo(){
     double sum_HotelBookings = 0;
     double sum_RentalCars = 0;
 
-
-
-    for(auto booking: bookings){
+    for(auto booking: allBookings){
         if(booking->getType() == "Flight"){
             cnt_FlightBookings++;
             sum_FlightBookings += booking->getPrice();
@@ -173,11 +222,43 @@ std::string TravelAgency::getInfo(){
 
 
 
+
     std::string total = "Es wurden " + cnt_FlightBookings_str + " Flugbuchungen im Wert von " + sum_FlightBookings_str + " Euro,                                     "
                                      + cnt_RentalCars_str + " Mietwagenbuchungen im Wert von " + sum_RentalCars_str + " Euro,                                        "
-                                     + cnt_HotelBookings_str + " Hotelreservierungen im Wert von " + sum_HotelBookings_str + " Euro angelegt.";
+                                     + cnt_HotelBookings_str + " Hotelreservierungen im Wert von " + sum_HotelBookings_str + " Euro angelegt.                        "
+                      + "Es wurden " + std::to_string(allTravels.size()) + "Reisen und " + std::to_string(allCustomers.size())
+                                     + " Kunden angelegt. Der Kunde mit der ID 1 hat " + std::to_string(findCustomer(1)->getTravelList().size())
+                                     + " Reisen gebucht. Zur Reise mit der ID 17 gehören " + std::to_string(findTravel(17)->getTravelBookings().size()) + " Buchungen.";
 
     return total;
 
+}
+
+Booking* TravelAgency::findBooking(std::string id){
+    for(auto booking: allBookings){
+        if(id == booking->getId()){
+            return booking;
+        }
+    }
+    return NULL;
+}
+
+
+Travel* TravelAgency::findTravel(int id){
+    for(auto travel: allTravels){
+        if(id == travel->getId()){
+            return travel;
+        }
+    }
+    return NULL;
+}
+
+Customer* TravelAgency::findCustomer(int id){
+    for(auto customer: allCustomers){
+        if(id == customer->getId()){
+            return customer;
+        }
+    }
+    return NULL;
 }
 

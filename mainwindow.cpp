@@ -69,7 +69,6 @@ QString dateUpgrade(std::string date){
 
     QString total(total_str.c_str());
 
-
     return total;
 }
 
