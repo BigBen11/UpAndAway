@@ -18,14 +18,13 @@ class TravelAgency
 public:
     TravelAgency();
 
-    void readFile(std::string filePath);
+    void readFile(const std::string& filePath);
 
     std::string getInfo();
 
-
     void addBooking(Booking* pBooking);
 
-    void addTraevel(Travel* travel);
+    void addTravel(Travel* travel);
 
     void addCustomer(Customer* customer);
 

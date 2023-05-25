@@ -6,7 +6,7 @@
 class Booking
 {
 public:
-    Booking(std::string type, std::string id, double price, std::string fromDate, std::string toDate);
+    Booking(int travelId, std::string type, std::string id, double price, std::string fromDate, std::string toDate);
     virtual ~Booking() = default;
     virtual std::string getDetails() = 0;
     std::string getId(){return id;};
@@ -32,12 +32,15 @@ public:
     virtual std::string getCompany(){return "";};
     virtual std::string getVehicleClass(){return "";};
 
+    int getTravelId() const;
+
 private:
     std::string id;
     double price;
     std::string fromDate;
     std::string toDate;
     std::string type;
+    int travelId;
 };
 
 std::string doubleToString(double value);

@@ -6,7 +6,7 @@
 class RentalCarReservation : public Booking
 {
 public:
-    RentalCarReservation(std::string type, std::string pickupLocation, std::string returnLocation, std::string company,
+    RentalCarReservation(int travelId, std::string type, std::string pickupLocation, std::string returnLocation, std::string company,
                          std::string id, double price, std::string fromDate, std::string toDate, std::string vehicleClass);
     std::string getDetails() override;
 

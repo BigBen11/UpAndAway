@@ -1,8 +1,8 @@
 #include "flightbooking.h"
 
-FlightBooking::FlightBooking(std::string type, std::string fromDestination, std::string toDestination, std::string airline,
+FlightBooking::FlightBooking(int travelId, std::string type, std::string fromDestination, std::string toDestination, std::string airline,
                              std::string id, double price, std::string fromDate, std::string toDate, std::string bookingClass)
-    :Booking(type, id, price, fromDate, toDate), fromDestination(fromDestination), toDestination(toDestination), airline(airline), bookingClass(bookingClass)
+    :Booking(travelId, type, id, price, fromDate, toDate), fromDestination(fromDestination), toDestination(toDestination), airline(airline), bookingClass(bookingClass)
 {
 
 }

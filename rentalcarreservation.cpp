@@ -1,8 +1,8 @@
 #include "rentalcarreservation.h"
 
-RentalCarReservation::RentalCarReservation(std::string type, std::string pickupLocation, std::string returnLocation, std::string company,
+RentalCarReservation::RentalCarReservation(int travelId, std::string type, std::string pickupLocation, std::string returnLocation, std::string company,
                                            std::string id, double price, std::string fromDate, std::string toDate, std::string vehicleClass)
-    :Booking(type, id, price, fromDate, toDate), pickupLocation(pickupLocation), returnLocation(returnLocation), company(company), vehicleClass(vehicleClass)
+    :Booking(travelId, type, id, price, fromDate, toDate), pickupLocation(pickupLocation), returnLocation(returnLocation), company(company), vehicleClass(vehicleClass)
 {
 
 }

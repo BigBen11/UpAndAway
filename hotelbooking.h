@@ -6,7 +6,7 @@
 class HotelBooking : public Booking
 {
 public:
-    HotelBooking(std::string type, std::string hotel, std::string town,
+    HotelBooking(int travelId, std::string type, std::string hotel, std::string town,
                  std::string id, double price, std::string fromDate, std::string toDate, std::string roomType);
     std::string getDetails() override;
 

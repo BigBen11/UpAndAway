@@ -6,7 +6,7 @@
 class FlightBooking : public Booking
 {
 public:
-    FlightBooking(std::string type, std::string fromDestination, std::string toDestination, std::string airline,
+    FlightBooking(int travelId, std::string type, std::string fromDestination, std::string toDestination, std::string airline,
                   std::string id, double price, std::string fromDate, std::string toDate, std::string bookingClass);
     std::string getDetails() override;
 

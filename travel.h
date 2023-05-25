@@ -7,7 +7,7 @@
 class Travel
 {
 public:
-    Travel(int id, int customerId, std::vector<Booking*> travelBookings);
+    Travel(int id, int customerId);
 
     void addBooking(Booking* booking);
 
@@ -16,6 +16,8 @@ public:
     int getCustomerId(){return customerId;};
 
     std::vector<Booking*> getTravelBookings(){return travelBookings;};
+
+    void setTravelBookings(const std::vector<Booking *> &newTravelBookings);
 
 private:
     int id;
