@@ -14,3 +14,8 @@ void Customer::setTravelList(const std::vector<Travel *> &newTravelList)
 {
     travelList = newTravelList;
 }
+
+std::string Customer::getName() const
+{
+    return name;
+}

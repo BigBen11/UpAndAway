@@ -10,6 +10,7 @@
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QListWidgetItem>
+#include <QTableWidgetItem>
 
 #include <iostream>
 #include <fstream>
@@ -35,10 +36,14 @@ private slots:
 
     void on_listWidget_currentRowChanged(int currentRow);
 
-    void on_actionAusw_hlen_triggered();
+    void on_pushButton_clicked();
+
+    void on_tableWidget_itemDoubleClicked(QTableWidgetItem *item);
+
+    void on_tableWidget_2_itemDoubleClicked(QTableWidgetItem *item);
 
 private:
     Ui::MainWindow *ui;
-    TravelAgency instanz;
+    TravelAgency interface;
 };
 #endif // MAINWINDOW_H

@@ -35,11 +35,6 @@ void TravelAgency::addCustomer(Customer* customer){
     allCustomers.push_back(customer);
 }
 
-
-
-
-
-
 void chekJsonObjekt(std::string const attributName, nlohmann::json const fileJson, int const objectNumber){
     if(fileJson.find(attributName) == fileJson.end() || fileJson[attributName].get<std::string>().empty()) {
         throw std::runtime_error("Error: " + attributName + " attribute is missing or empty in object " + std::to_string(objectNumber));
@@ -59,23 +54,23 @@ void chekJsonObjektFlight(std::string attributName, nlohmann::json fileJson, int
     }
 }
 
-bool isTravelIdExistent(std::vector<int> travelIdAll, nlohmann::json object){
-    for(auto travelId: travelIdAll){
-        if(object["travelId"] == travelId){
-            return true;
-        }
-    }
-    return false;
-}
+//bool isTravelIdExistent(std::vector<int> travelIdAll, nlohmann::json object){
+//    for(auto travelId: travelIdAll){
+//        if(object["travelId"] == travelId){
+//            return true;
+//        }
+//    }
+//    return false;
+//}
 
-bool isCustomerIdExistent(std::vector<int> customerIdAll, nlohmann::json object){
-    for(auto customerId: customerIdAll){
-        if(object["customerId"] == customerId){
-            return true;
-        }
-    }
-    return false;
-}
+//bool isCustomerIdExistent(std::vector<int> customerIdAll, nlohmann::json object){
+//    for(auto customerId: customerIdAll){
+//        if(object["customerId"] == customerId){
+//            return true;
+//        }
+//    }
+//    return false;
+//}
 
 
 
@@ -204,14 +199,6 @@ void TravelAgency::readFile(const std::string& filePath) {
     }
 }
 
-
-
-
-
-
-
-
-
 std::string TravelAgency::getInfo(){
     int cnt_FlightBookings = 0;
     int cnt_HotelBookings = 0;
@@ -241,9 +228,6 @@ std::string TravelAgency::getInfo(){
     std::string sum_FlightBookings_str = std::to_string(sum_FlightBookings);
     std::string sum_HotelBookings_str = std::to_string(sum_HotelBookings);
     std::string sum_RentalCars_str = std::to_string(sum_RentalCars);
-
-
-
 
     std::string total = "Es wurden " + cnt_FlightBookings_str + " Flugbuchungen im Wert von " + sum_FlightBookings_str + " Euro,                                     "
                                      + cnt_RentalCars_str + " Mietwagenbuchungen im Wert von " + sum_RentalCars_str + " Euro,                                        "

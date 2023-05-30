@@ -18,6 +18,8 @@ public:
 
     void setTravelList(const std::vector<Travel *> &newTravelList);
 
+    std::string getName() const;
+
 private:
     int id;
     std::string name;
