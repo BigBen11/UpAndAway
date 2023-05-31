@@ -34,6 +34,12 @@ public:
 
     int getTravelId() const;
 
+    void setFromDate(const std::string &newFromDate);
+
+    void setToDate(const std::string &newToDate);
+
+    void setPrice(double newPrice);
+
 private:
     std::string id;
     double price;

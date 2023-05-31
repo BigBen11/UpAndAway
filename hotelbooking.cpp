@@ -25,3 +25,18 @@ std::string HotelBooking::getDetails(){
             + ".Preis: " + doubleToString(getPrice()) + " Euro. Wohnung Typ: " + roomTypeFull;
     return totalString;
 }
+
+void HotelBooking::setHotel(const std::string &newHotel)
+{
+    hotel = newHotel;
+}
+
+void HotelBooking::setTown(const std::string &newTown)
+{
+    town = newTown;
+}
+
+void HotelBooking::setRoomType(const std::string &newRoomType)
+{
+    roomType = newRoomType;
+}

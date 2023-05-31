@@ -14,6 +14,14 @@ public:
     std::string getToDestination() override{return toDestination;};
     std::string getAirline() override{return airline;};
     std::string getBookingClass() override{return bookingClass;};
+    void setFromDestination(const std::string &newFromDestination);
+
+    void setToDestination(const std::string &newToDestination);
+
+    void setAirline(const std::string &newAirline);
+
+    void setBookingClass(const std::string &newBookingClass);
+
 private:
     std::string fromDestination;
     std::string toDestination;

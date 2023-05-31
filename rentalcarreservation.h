@@ -14,6 +14,14 @@ public:
     std::string getReturnLocation() override {return returnLocation;};
     std::string getCompany() override {return company;};
     std::string getVehicleClass() override {return vehicleClass;};
+    void setPickupLocation(const std::string &newPickupLocation);
+
+    void setReturnLocation(const std::string &newReturnLocation);
+
+    void setCompany(const std::string &newCompany);
+
+    void setVehicleClass(const std::string &newVehicleClass);
+
 private:
     std::string pickupLocation;
     std::string returnLocation;

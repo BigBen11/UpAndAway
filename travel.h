@@ -19,6 +19,8 @@ public:
 
     void setTravelBookings(const std::vector<Booking *> &newTravelBookings);
 
+    Booking* findBookingInTravel(std::string idBooking);
+
 private:
     int id;
     int customerId;

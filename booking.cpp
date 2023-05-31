@@ -11,6 +11,21 @@ int Booking::getTravelId() const
     return travelId;
 }
 
+void Booking::setFromDate(const std::string &newFromDate)
+{
+    fromDate = newFromDate;
+}
+
+void Booking::setToDate(const std::string &newToDate)
+{
+    toDate = newToDate;
+}
+
+void Booking::setPrice(double newPrice)
+{
+    price = newPrice;
+}
+
 std::string doubleToString(double value)
 {
     std::ostringstream oss;

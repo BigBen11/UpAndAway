@@ -13,6 +13,12 @@ public:
     std::string getHotel() override {return hotel;};
     std::string getTown() override {return town;};
     std::string getRoomType() override {return roomType;};
+    void setHotel(const std::string &newHotel);
+
+    void setTown(const std::string &newTown);
+
+    void setRoomType(const std::string &newRoomType);
+
 private:
     std::string hotel;
     std::string town;

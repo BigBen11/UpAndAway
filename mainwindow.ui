@@ -7,14 +7,15 @@
     <x>0</x>
     <y>0</y>
     <width>1072</width>
-    <height>739</height>
+    <height>745</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>UpAndAway</string>
   </property>
   <property name="windowIcon">
-   <iconset theme="face-smile"/>
+   <iconset theme="face-smile">
+    <normaloff>.</normaloff>.</iconset>
   </property>
   <property name="inputMethodHints">
    <set>Qt::ImhMultiLine</set>
@@ -67,32 +68,32 @@
          </property>
          <row>
           <property name="text">
-           <string> </string>
+           <string/>
           </property>
          </row>
          <row>
           <property name="text">
-           <string> </string>
+           <string/>
           </property>
          </row>
          <row>
           <property name="text">
-           <string> </string>
+           <string/>
           </property>
          </row>
          <row>
           <property name="text">
-           <string> </string>
+           <string/>
           </property>
          </row>
          <row>
           <property name="text">
-           <string> </string>
+           <string/>
           </property>
          </row>
          <row>
           <property name="text">
-           <string> </string>
+           <string/>
           </property>
          </row>
          <column>
@@ -187,47 +188,47 @@
          </property>
          <row>
           <property name="text">
-           <string> </string>
+           <string/>
           </property>
          </row>
          <row>
           <property name="text">
-           <string> </string>
+           <string/>
           </property>
          </row>
          <row>
           <property name="text">
-           <string> </string>
+           <string/>
           </property>
          </row>
          <row>
           <property name="text">
-           <string> </string>
+           <string/>
           </property>
          </row>
          <row>
           <property name="text">
-           <string> </string>
+           <string/>
           </property>
          </row>
          <row>
           <property name="text">
-           <string> </string>
+           <string/>
           </property>
          </row>
          <row>
           <property name="text">
-           <string> </string>
+           <string/>
           </property>
          </row>
          <row>
           <property name="text">
-           <string> </string>
+           <string/>
           </property>
          </row>
          <row>
           <property name="text">
-           <string> </string>
+           <string/>
           </property>
          </row>
          <column>
@@ -307,13 +308,6 @@
          </property>
         </widget>
        </item>
-       <item row="1" column="1">
-        <widget class="QSpinBox" name="BuchungStart">
-         <property name="maximum">
-          <number>99999999</number>
-         </property>
-        </widget>
-       </item>
        <item row="2" column="0">
         <widget class="QLabel" name="label_8">
          <property name="text">
@@ -345,7 +339,7 @@
        <item row="4" column="1">
         <widget class="QTabWidget" name="tabWidget">
          <property name="currentIndex">
-          <number>1</number>
+          <number>2</number>
          </property>
          <widget class="QWidget" name="Flug">
           <attribute name="title">
@@ -490,6 +484,9 @@
              <height>0</height>
             </size>
            </property>
+           <property name="inputMethodHints">
+            <set>Qt::ImhNone</set>
+           </property>
            <property name="text">
             <string>Speichern</string>
            </property>
@@ -509,6 +506,13 @@
           </widget>
          </item>
         </layout>
+       </item>
+       <item row="1" column="1">
+        <widget class="QSpinBox" name="BuchungStart">
+         <property name="maximum">
+          <number>99999999</number>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>

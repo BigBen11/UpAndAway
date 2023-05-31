@@ -26,3 +26,23 @@ std::string FlightBooking::getDetails() {
     return totalString;
 }
 
+void FlightBooking::setFromDestination(const std::string &newFromDestination)
+{
+    fromDestination = newFromDestination;
+}
+
+void FlightBooking::setToDestination(const std::string &newToDestination)
+{
+    toDestination = newToDestination;
+}
+
+void FlightBooking::setAirline(const std::string &newAirline)
+{
+    airline = newAirline;
+}
+
+void FlightBooking::setBookingClass(const std::string &newBookingClass)
+{
+    bookingClass = newBookingClass;
+}
+

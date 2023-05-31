@@ -31,16 +31,48 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+    void setCustomerInfo(Customer* customer);
+
 private slots:
     void on_actionEinlesen_triggered();
-
-    void on_listWidget_currentRowChanged(int currentRow);
 
     void on_pushButton_clicked();
 
     void on_tableWidget_itemDoubleClicked(QTableWidgetItem *item);
 
     void on_tableWidget_2_itemDoubleClicked(QTableWidgetItem *item);
+
+    void on_Speichern_clicked();
+
+    void on_Abbrechen_clicked();
+
+    void on_BuchungStart_valueChanged(int arg1);
+
+    void on_BuchungEnde_valueChanged(int arg1);
+
+    void on_BuchungPreis_valueChanged(double arg1);
+
+    void on_Abreiseort_textChanged(const QString &arg1);
+
+    void on_Ankunftsort_textChanged(const QString &arg1);
+
+    void on_Fluglinie_textChanged(const QString &arg1);
+
+    void on_Klasse_textChanged(const QString &arg1);
+
+    void on_Hotel_2_textChanged(const QString &arg1);
+
+    void on_Stadt_textChanged(const QString &arg1);
+
+    void on_Zimmertyp_textChanged(const QString &arg1);
+
+    void on_Abholort_textChanged(const QString &arg1);
+
+    void on_Rueckgabeort_textChanged(const QString &arg1);
+
+    void on_Firma_textChanged(const QString &arg1);
+
+    void on_Fahrzeugklasse_textChanged(const QString &arg1);
 
 private:
     Ui::MainWindow *ui;
