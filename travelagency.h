@@ -5,12 +5,14 @@
 #include "booking.h"
 #include <iostream>
 #include <fstream>
-#include "json.hpp"
+#include "C:\ProjectsQt\UpAndAway\upandaway\json.hpp"
+#include <list>
 
 #include "flightbooking.h"
 #include "hotelbooking.h"
 #include "rentalcarreservation.h"
 #include "customer.h"
+#include "airport.h"
 
 
 class TravelAgency
@@ -22,29 +24,37 @@ public:
 
     std::string getInfo();
 
-    void addBooking(Booking* pBooking);
+    void addBooking(std::shared_ptr<Booking> pBooking);
 
-    void addTravel(Travel* travel);
+    void addTravel(std::shared_ptr<Travel> travel);
 
-    void addCustomer(Customer* customer);
+    void addCustomer(std::shared_ptr<Customer> customer);
+
+    void addAirport(std::shared_ptr<Airport> airport);
 
 
-    std::vector<Booking*> getBookings();
+    std::vector<std::shared_ptr<Booking>> getBookings();
 
 
-    Booking* findBooking(std::string id);
+    std::shared_ptr<Booking> findBooking(std::string id);
 
-    Travel* findTravel(int id);
+    std::shared_ptr<Travel> findTravel(int id);
 
-    Customer* findCustomer(int id);
+    std::shared_ptr<Customer> findCustomer(int id);
 
 
     ~TravelAgency();
 
+    std::vector<std::shared_ptr<Airport>> getAllAirports() const;
+
+    std::shared_ptr<Airport> findAirport(std::string iata_code);
+
 private:
-    std::vector<Booking*> allBookings;
-    std::vector<Customer*> allCustomers;
-    std::vector<Travel*> allTravels;
+    std::vector<std::shared_ptr<Booking>> allBookings;
+    std::vector<std::shared_ptr<Customer>> allCustomers;
+    std::vector<std::shared_ptr<Travel>> allTravels;
+
+    std::vector<std::shared_ptr<Airport>> allAirports;
 };
 
 #endif // TRAVELAGENCY_H

@@ -1,8 +1,11 @@
 #include "flightbooking.h"
 
 FlightBooking::FlightBooking(int travelId, std::string type, std::string fromDestination, std::string toDestination, std::string airline,
-                             std::string id, double price, std::string fromDate, std::string toDate, std::string bookingClass)
-    :Booking(travelId, type, id, price, fromDate, toDate), fromDestination(fromDestination), toDestination(toDestination), airline(airline), bookingClass(bookingClass)
+                             std::string id, double price, std::string fromDate, std::string toDate, std::string bookingClass,
+                             std::string fromDestLatitude, std::string fromDestLongitude, std::string toDestLatitude, std::string toDestLongitude)
+    :Booking(travelId, type, id, price, fromDate, toDate), fromDestination(fromDestination), toDestination(toDestination),
+    airline(airline), bookingClass(bookingClass), fromDestLatitude(fromDestLatitude), fromDestLongitude(fromDestLongitude),
+    toDestLatitude(toDestLatitude),  toDestLongitude(toDestLongitude)
 {
 
 }
@@ -22,7 +25,7 @@ std::string FlightBooking::getDetails() {
         bookingClassFull = "keine Angabe";
     }
     std::string totalString = "ID: " + Booking::getId() + " Flugbuchung von " + fromDestination + " nach " + toDestination + ".\nMit " + airline +
-            " am " + getFromDate() + ". Preis: " + doubleToString(getPrice()) + " Euro. Klasse: " + bookingClassFull;
+                              " am " + getFromDate() + ". Preis: " + std::to_string(getPrice()) + " Euro. Klasse: " + bookingClassFull;
     return totalString;
 }
 

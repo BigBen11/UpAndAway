@@ -6,11 +6,11 @@ Customer::Customer(int id, std::string name)
 
 }
 
-void Customer::addTravel(Travel* travel){
+void Customer::addTravel(std::shared_ptr<Travel> travel){
     travelList.push_back(travel);
 }
 
-void Customer::setTravelList(const std::vector<Travel *> &newTravelList)
+void Customer::setTravelList(const std::vector<std::shared_ptr<Travel>> &newTravelList)
 {
     travelList = newTravelList;
 }

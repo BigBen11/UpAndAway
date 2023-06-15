@@ -1,38 +1,58 @@
- #include "travelagency.h"
+#include "travelagency.h"
 #include <QDebug>
 
 TravelAgency::TravelAgency()
 {
+    nlohmann::json fileJson;
+
+    std::ifstream fileInput("C:/ProjectsQt/UpAndAway/upandaway/iatacodes.json");
+
+    if (!fileInput.is_open()) {
+        std::cerr << "Failed to open file\n";
+        exit(-1);
+    }
+
+    fileInput >> fileJson;
+
+    fileInput.close();
+
+    std::shared_ptr<Airport> pAirport = NULL;
+    for(const auto& airport: fileJson){
+        pAirport = std::make_shared<Airport>(Airport(airport["name"], airport["iso_country"], airport["municipality"], airport["iata_code"]));
+        addAirport(pAirport);
+    }
+
 
 }
 
 TravelAgency::~TravelAgency()
 {
-    for (auto booking: allBookings) {
-        delete booking;
-    }
-    for(auto travel: allTravels){
-        delete travel;
-    }
-    for(auto customer: allCustomers){
-        delete customer;
-    }
+
 }
 
-std::vector<Booking*> TravelAgency::getBookings(){
+std::vector<std::shared_ptr<Airport>> TravelAgency::getAllAirports() const
+{
+    return allAirports;
+}
+
+std::vector<std::shared_ptr<Booking>> TravelAgency::getBookings(){
     return allBookings;
 }
 
-void TravelAgency::addBooking(Booking* pBooking){
+void TravelAgency::addBooking(std::shared_ptr<Booking> pBooking){
     allBookings.push_back(pBooking);
 }
 
-void TravelAgency::addTravel(Travel* travel){
+void TravelAgency::addTravel(std::shared_ptr<Travel> travel){
     allTravels.push_back(travel);
 }
 
-void TravelAgency::addCustomer(Customer* customer){
+void TravelAgency::addCustomer(std::shared_ptr<Customer> customer){
     allCustomers.push_back(customer);
+}
+
+void TravelAgency::addAirport(std::shared_ptr<Airport> airport){
+    allAirports.push_back(airport);
 }
 
 void chekJsonObjekt(std::string const attributName, nlohmann::json const fileJson, int const objectNumber){
@@ -53,25 +73,6 @@ void chekJsonObjektFlight(std::string attributName, nlohmann::json fileJson, int
         throw std::runtime_error("Error: " + attributName + " attribute is missing or empty or !=3 letter in object " + std::to_string(objectNumber));
     }
 }
-
-//bool isTravelIdExistent(std::vector<int> travelIdAll, nlohmann::json object){
-//    for(auto travelId: travelIdAll){
-//        if(object["travelId"] == travelId){
-//            return true;
-//        }
-//    }
-//    return false;
-//}
-
-//bool isCustomerIdExistent(std::vector<int> customerIdAll, nlohmann::json object){
-//    for(auto customerId: customerIdAll){
-//        if(object["customerId"] == customerId){
-//            return true;
-//        }
-//    }
-//    return false;
-//}
-
 
 
 void TravelAgency::readFile(const std::string& filePath) {
@@ -115,34 +116,41 @@ void TravelAgency::readFile(const std::string& filePath) {
 
     /*BOOKINGS SPEICHERN*/
     for (const auto& booking : fileJson) {
-        if (findBooking(booking["id"].get<std::string>()) == nullptr) {
-            Booking* pBooking = nullptr;
+
+
+
+            std::shared_ptr<Booking> pBooking = nullptr;
 
             if (booking["type"] == "Flight") {
-                pBooking = new FlightBooking(booking["travelId"], booking["type"], booking["fromDest"], booking["toDest"],
+                pBooking = std::make_shared<FlightBooking> (FlightBooking(booking["travelId"], booking["type"], booking["fromDest"], booking["toDest"],
                     booking["airline"], booking["id"], booking["price"],
-                    booking["fromDate"], booking["toDate"], booking["bookingClass"]);
+                    booking["fromDate"], booking["toDate"], booking["bookingClass"],
+                    booking["fromDestLatitude"], booking["fromDestLongitude"],
+                    booking["toDestLatitude"], booking["toDestLongitude"]));
 
             } else if (booking["type"] == "RentalCar") {
-                pBooking = new RentalCarReservation(booking["travelId"], booking["type"], booking["pickupLocation"], booking["returnLocation"],
+                pBooking = std::make_shared<RentalCarReservation>(RentalCarReservation(booking["travelId"], booking["type"], booking["pickupLocation"], booking["returnLocation"],
                     booking["company"], booking["id"], booking["price"],
-                    booking["fromDate"], booking["toDate"], booking["vehicleClass"]);
+                    booking["fromDate"], booking["toDate"], booking["vehicleClass"],
+                    booking["pickupLatitude"], booking["pickupLongitude"],
+                    booking["returnLatitude"], booking["returnLongitude"]));
 
             } else if (booking["type"] == "Hotel") {
-                pBooking = new HotelBooking(booking["travelId"], booking["type"], booking["hotel"], booking["town"],
-                    booking["id"], booking["price"], booking["fromDate"], booking["toDate"], booking["roomType"]);
+                pBooking = std::make_shared<HotelBooking>(HotelBooking(booking["travelId"], booking["type"], booking["hotel"], booking["town"],
+                    booking["id"], booking["price"], booking["fromDate"], booking["toDate"], booking["roomType"],
+                    booking["hotelLatitude"], booking["hotelLongitude"]));
+
             }
 
-            if (pBooking != nullptr) {
-                addBooking(pBooking);
-            }
-        }
+            allBookings.push_back(pBooking);
+
+
     }
 
     /*TRAVELS*/
     for (const auto& objJson : fileJson){
         if(!findTravel(objJson["travelId"])){
-            Travel* pTravel = new Travel(objJson["travelId"],objJson["customerId"]);
+            std::shared_ptr<Travel> pTravel = std::make_shared<Travel>(Travel(objJson["travelId"],objJson["customerId"]));
             addTravel(pTravel);
         }
     }
@@ -150,7 +158,7 @@ void TravelAgency::readFile(const std::string& filePath) {
      /*CUSTOMERS*/
     for (const auto& objJson : fileJson){
         if(!findCustomer(objJson["customerId"])){
-            Customer* pCustomer = new Customer(objJson["customerId"], objJson["customerName"]);
+            std::shared_ptr<Customer> pCustomer = std::make_shared<Customer>(Customer(objJson["customerId"], objJson["customerName"]));
             addCustomer(pCustomer);
         }
     }
@@ -161,11 +169,9 @@ void TravelAgency::readFile(const std::string& filePath) {
 
     /*BOOKINGS FÜR TRAVELS*/
     for (const auto& travel: allTravels){
-        std::vector <Booking*> tmpBookings;
+        std::vector <std::shared_ptr<Booking>> tmpBookings;
 
         for(const auto& booking : allBookings){
-
-
             if(booking->getTravelId() == travel->getId()){
                 tmpBookings.push_back(booking);
             }
@@ -181,11 +187,9 @@ void TravelAgency::readFile(const std::string& filePath) {
 
     /*TRAVELS FÜR CUSTOMERS*/
     for (const auto& customer: allCustomers){
-        std::vector <Travel*> tmpTravels;
+        std::vector <std::shared_ptr<Travel>> tmpTravels;
 
         for(const auto& travel: allTravels){
-
-
             if(travel->getCustomerId() == customer->getId()){
                 tmpTravels.push_back(travel);
             }
@@ -197,6 +201,7 @@ void TravelAgency::readFile(const std::string& filePath) {
 
         //std::cout << customer->getTravelList().size() << std::endl;
     }
+
 }
 
 std::string TravelAgency::getInfo(){
@@ -240,31 +245,40 @@ std::string TravelAgency::getInfo(){
 
 }
 
-Booking* TravelAgency::findBooking(std::string id){
+std::shared_ptr<Booking> TravelAgency::findBooking(std::string id){
     for(auto booking: allBookings){
         if(id == booking->getId()){
             return booking;
         }
     }
-    return NULL;
+    return nullptr;
 }
 
 
-Travel* TravelAgency::findTravel(int id){
+std::shared_ptr<Travel> TravelAgency::findTravel(int id){
     for(auto travel: allTravels){
         if(id == travel->getId()){
             return travel;
         }
     }
-    return NULL;
+    return nullptr;
 }
 
-Customer* TravelAgency::findCustomer(int id){
+std::shared_ptr<Customer> TravelAgency::findCustomer(int id){
     for(auto customer: allCustomers){
         if(id == customer->getId()){
             return customer;
         }
     }
-    return NULL;
+    return nullptr;
+}
+
+std::shared_ptr<Airport> TravelAgency::findAirport(std::string iata_code){
+    for(auto airport: allAirports){
+        if(iata_code == airport->getIata_code()){
+            return airport;
+        }
+    }
+    return nullptr;
 }
 

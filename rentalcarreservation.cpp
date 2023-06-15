@@ -1,15 +1,18 @@
 #include "rentalcarreservation.h"
 
 RentalCarReservation::RentalCarReservation(int travelId, std::string type, std::string pickupLocation, std::string returnLocation, std::string company,
-                                           std::string id, double price, std::string fromDate, std::string toDate, std::string vehicleClass)
-    :Booking(travelId, type, id, price, fromDate, toDate), pickupLocation(pickupLocation), returnLocation(returnLocation), company(company), vehicleClass(vehicleClass)
+                                           std::string id, double price, std::string fromDate, std::string toDate, std::string vehicleClass,
+                                           std::string pickupLatitude, std::string pickupLongitude, std::string returnLatitude, std::string returnLongitude)
+    :Booking(travelId, type, id, price, fromDate, toDate), pickupLocation(pickupLocation), returnLocation(returnLocation),
+    company(company), vehicleClass(vehicleClass),
+    pickupLatitude(pickupLatitude), pickupLongitude(pickupLongitude), returnLatitude(returnLatitude), returnLongitude(returnLongitude)
 {
 
 }
 
  std::string RentalCarReservation::getDetails() {
     std::string totalString = "ID: " + Booking::getId() + " Mietwagenreservierung mit " + company + ". Abholung am " + getFromDate() + " in " + pickupLocation
-            + ".\nRueckgabe am " + getToDate() + " in " + returnLocation + ". Preis: " + doubleToString(getPrice()) + " Euro. Vehicle Class: " + vehicleClass;
+                               + ".\nRueckgabe am " + getToDate() + " in " + returnLocation + ". Preis: " + std::to_string(getPrice()) + " Euro. Vehicle Class: " + vehicleClass;
      return totalString;
  }
 

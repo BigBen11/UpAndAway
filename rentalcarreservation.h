@@ -7,7 +7,9 @@ class RentalCarReservation : public Booking
 {
 public:
     RentalCarReservation(int travelId, std::string type, std::string pickupLocation, std::string returnLocation, std::string company,
-                         std::string id, double price, std::string fromDate, std::string toDate, std::string vehicleClass);
+                         std::string id, double price, std::string fromDate, std::string toDate, std::string vehicleClass,
+                         std::string pickupLatitude, std::string pickupLongitude, std::string returnLatitude, std::string returnLongitude);
+
     std::string getDetails() override;
 
     std::string getPickupLocation() override {return pickupLocation;};
@@ -27,6 +29,11 @@ private:
     std::string returnLocation;
     std::string company;
     std::string vehicleClass;
+
+    std::string pickupLatitude;
+    std::string pickupLongitude;
+    std::string returnLatitude;
+    std::string returnLongitude;
 };
 
 #endif // RENTALCARRESERVATION_H

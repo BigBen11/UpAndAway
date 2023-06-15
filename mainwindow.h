@@ -31,7 +31,7 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-    void setCustomerInfo(Customer* customer);
+    void setCustomerInfo(std::shared_ptr<Customer> customer);
 
 private slots:
     void on_actionEinlesen_triggered();
@@ -76,6 +76,6 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-    TravelAgency interface;
+    std::shared_ptr<TravelAgency> interface;
 };
 #endif // MAINWINDOW_H

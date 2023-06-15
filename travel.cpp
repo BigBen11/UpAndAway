@@ -6,16 +6,16 @@ Travel::Travel(int id, int customerId)
 
 }
 
-void Travel::addBooking(Booking* booking){
+void Travel::addBooking(std::shared_ptr<Booking> booking){
     travelBookings.push_back(booking);
 }
 
-void Travel::setTravelBookings(const std::vector<Booking *> &newTravelBookings)
+void Travel::setTravelBookings(const std::vector<std::shared_ptr<Booking>> &newTravelBookings)
 {
     travelBookings = newTravelBookings;
 }
 
-Booking *Travel::findBookingInTravel(std::string idBooking)
+std::shared_ptr<Booking> Travel::findBookingInTravel(std::string idBooking)
 {
     for(auto booking: travelBookings){
         if(idBooking == booking->getId()){

@@ -7,7 +7,9 @@ class FlightBooking : public Booking
 {
 public:
     FlightBooking(int travelId, std::string type, std::string fromDestination, std::string toDestination, std::string airline,
-                  std::string id, double price, std::string fromDate, std::string toDate, std::string bookingClass);
+                  std::string id, double price, std::string fromDate, std::string toDate, std::string bookingClass,
+                  std::string fromDestLatitude, std::string fromDestLongitude, std::string toDestLatitude, std::string toDestLongitude);
+
     std::string getDetails() override;
 
     std::string getfromDestination() override{return fromDestination;};
@@ -27,6 +29,11 @@ private:
     std::string toDestination;
     std::string airline;
     std::string bookingClass;
+
+    std::string fromDestLatitude;
+    std::string fromDestLongitude;
+    std::string toDestLatitude;
+    std::string toDestLongitude;
 };
 
 #endif // FLIGHTBOOKING_H

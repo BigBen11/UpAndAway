@@ -49,7 +49,5 @@ private:
     int travelId;
 };
 
-std::string doubleToString(double value);
-
 
 #endif // BOOKING_H

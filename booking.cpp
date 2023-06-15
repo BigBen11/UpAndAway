@@ -26,10 +26,3 @@ void Booking::setPrice(double newPrice)
     price = newPrice;
 }
 
-std::string doubleToString(double value)
-{
-    std::ostringstream oss;
-    oss << value;
-    return oss.str();
-}
-
