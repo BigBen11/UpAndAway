@@ -49,6 +49,10 @@ public:
 
     std::shared_ptr<Airport> findAirport(std::string iata_code);
 
+    std::vector<std::shared_ptr<Customer> > getAllCustomers() const;
+
+    std::vector<std::shared_ptr<Travel> > getAllTravels() const;
+
 private:
     std::vector<std::shared_ptr<Booking>> allBookings;
     std::vector<std::shared_ptr<Customer>> allCustomers;

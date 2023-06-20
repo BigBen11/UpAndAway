@@ -36,8 +36,6 @@ public:
 private slots:
     void on_actionEinlesen_triggered();
 
-    void on_pushButton_clicked();
-
     void on_tableWidget_itemDoubleClicked(QTableWidgetItem *item);
 
     void on_tableWidget_2_itemDoubleClicked(QTableWidgetItem *item);
@@ -73,6 +71,16 @@ private slots:
     void on_Firma_textChanged(const QString &arg1);
 
     void on_Fahrzeugklasse_textChanged(const QString &arg1);
+
+    void on_button_gps_clicked();
+
+    void on_actionNeue_Kunde_anlegen_triggered();
+
+    void on_actionNeue_Buchung_anlegen_triggered();
+
+    void on_actionKund_innensuche_triggered();
+
+    void on_BuchungAnlegen_clicked();
 
 private:
     Ui::MainWindow *ui;

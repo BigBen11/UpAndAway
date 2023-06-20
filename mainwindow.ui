@@ -6,9 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1139</width>
-    <height>745</height>
+    <width>1164</width>
+    <height>800</height>
    </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>600</width>
+    <height>800</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string>UpAndAway</string>
@@ -21,24 +27,11 @@
    <set>Qt::ImhMultiLine</set>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QPushButton" name="pushButton">
-    <property name="geometry">
-     <rect>
-      <x>11</x>
-      <y>11</y>
-      <width>96</width>
-      <height>29</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Kundensuche</string>
-    </property>
-   </widget>
    <widget class="QGroupBox" name="groupBox">
     <property name="geometry">
      <rect>
-      <x>11</x>
-      <y>47</y>
+      <x>10</x>
+      <y>30</y>
       <width>380</width>
       <height>307</height>
      </rect>
@@ -166,8 +159,8 @@
    <widget class="QGroupBox" name="groupBox_2">
     <property name="geometry">
      <rect>
-      <x>11</x>
-      <y>383</y>
+      <x>10</x>
+      <y>350</y>
       <width>500</width>
       <height>301</height>
      </rect>
@@ -284,15 +277,22 @@
        </property>
       </widget>
      </item>
+     <item row="2" column="1">
+      <widget class="QPushButton" name="button_gps">
+       <property name="text">
+        <string>Reise auf der Karte anzeigen</string>
+       </property>
+      </widget>
+     </item>
     </layout>
    </widget>
    <widget class="QGroupBox" name="groupBox_3">
     <property name="geometry">
      <rect>
-      <x>522</x>
-      <y>30</y>
+      <x>530</x>
+      <y>0</y>
       <width>591</width>
-      <height>651</height>
+      <height>751</height>
      </rect>
     </property>
     <property name="title">
@@ -332,6 +332,13 @@
        </property>
       </widget>
      </item>
+     <item row="1" column="1">
+      <widget class="QSpinBox" name="BuchungStart">
+       <property name="maximum">
+        <number>99999999</number>
+       </property>
+      </widget>
+     </item>
      <item row="2" column="0">
       <widget class="QLabel" name="label_8">
        <property name="text">
@@ -360,209 +367,7 @@
        </property>
       </widget>
      </item>
-     <item row="4" column="1">
-      <widget class="QTabWidget" name="tabWidget">
-       <property name="currentIndex">
-        <number>0</number>
-       </property>
-       <widget class="QWidget" name="Flug">
-        <attribute name="title">
-         <string>Flugbuchung</string>
-        </attribute>
-        <layout class="QFormLayout" name="formLayout_7">
-         <item row="1" column="0">
-          <widget class="QLabel" name="label_17">
-           <property name="text">
-            <string>Flughafencode des Abreiseort</string>
-           </property>
-          </widget>
-         </item>
-         <item row="4" column="0">
-          <widget class="QLabel" name="label_18">
-           <property name="text">
-            <string>Flughafencode des Ankunftsort</string>
-           </property>
-          </widget>
-         </item>
-         <item row="6" column="0">
-          <widget class="QLabel" name="label_19">
-           <property name="text">
-            <string>Fluglinie</string>
-           </property>
-          </widget>
-         </item>
-         <item row="7" column="0">
-          <widget class="QLabel" name="label_20">
-           <property name="text">
-            <string>Klasse</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="1">
-          <widget class="QLineEdit" name="Abreiseort"/>
-         </item>
-         <item row="4" column="1">
-          <widget class="QLineEdit" name="Ankunftsort">
-           <property name="readOnly">
-            <bool>false</bool>
-           </property>
-          </widget>
-         </item>
-         <item row="6" column="1">
-          <widget class="QLineEdit" name="Fluglinie"/>
-         </item>
-         <item row="7" column="1">
-          <widget class="QLineEdit" name="Klasse"/>
-         </item>
-         <item row="0" column="0">
-          <widget class="QLabel" name="label_21">
-           <property name="text">
-            <string>Name des Abreiseortes</string>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="0">
-          <widget class="QLabel" name="label_22">
-           <property name="text">
-            <string>Name des Ankunftsortes</string>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="1">
-          <widget class="QLineEdit" name="NameAnkunftsort">
-           <property name="readOnly">
-            <bool>true</bool>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="1">
-          <widget class="QLineEdit" name="NameAbreiseort">
-           <property name="readOnly">
-            <bool>true</bool>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="1">
-          <spacer name="verticalSpacer">
-           <property name="orientation">
-            <enum>Qt::Vertical</enum>
-           </property>
-           <property name="sizeType">
-            <enum>QSizePolicy::Maximum</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>20</width>
-             <height>15</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item row="5" column="1">
-          <spacer name="verticalSpacer_2">
-           <property name="orientation">
-            <enum>Qt::Vertical</enum>
-           </property>
-           <property name="sizeType">
-            <enum>QSizePolicy::Maximum</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>20</width>
-             <height>15</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-        </layout>
-       </widget>
-       <widget class="QWidget" name="Hotel">
-        <attribute name="title">
-         <string>Hotelbuchung</string>
-        </attribute>
-        <layout class="QFormLayout" name="formLayout_5">
-         <item row="0" column="0">
-          <widget class="QLabel" name="label_10">
-           <property name="text">
-            <string>Hotel                                   </string>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="1">
-          <widget class="QLineEdit" name="Hotel_2"/>
-         </item>
-         <item row="1" column="0">
-          <widget class="QLabel" name="label_11">
-           <property name="text">
-            <string>Stadt</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="1">
-          <widget class="QLineEdit" name="Stadt"/>
-         </item>
-         <item row="2" column="0">
-          <widget class="QLabel" name="label_12">
-           <property name="text">
-            <string>Zimmertyp</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="1">
-          <widget class="QLineEdit" name="Zimmertyp"/>
-         </item>
-        </layout>
-       </widget>
-       <widget class="QWidget" name="Wagen">
-        <attribute name="title">
-         <string>Mietwagenreservierung</string>
-        </attribute>
-        <layout class="QFormLayout" name="formLayout_6">
-         <item row="0" column="0">
-          <widget class="QLabel" name="label_13">
-           <property name="text">
-            <string>Abholort                         </string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="0">
-          <widget class="QLabel" name="label_14">
-           <property name="text">
-            <string>Rückgabeort</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="0">
-          <widget class="QLabel" name="label_15">
-           <property name="text">
-            <string>Firma</string>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="0">
-          <widget class="QLabel" name="label_16">
-           <property name="text">
-            <string>Fahrzeugklasse</string>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="1">
-          <widget class="QLineEdit" name="Abholort"/>
-         </item>
-         <item row="1" column="1">
-          <widget class="QLineEdit" name="Rueckgabeort"/>
-         </item>
-         <item row="2" column="1">
-          <widget class="QLineEdit" name="Firma"/>
-         </item>
-         <item row="3" column="1">
-          <widget class="QLineEdit" name="Fahrzeugklasse"/>
-         </item>
-        </layout>
-       </widget>
-      </widget>
-     </item>
-     <item row="6" column="1">
+     <item row="5" column="1">
       <layout class="QHBoxLayout" name="horizontalLayout_2">
        <item>
         <widget class="QPushButton" name="Speichern">
@@ -595,11 +400,401 @@
        </item>
       </layout>
      </item>
-     <item row="1" column="1">
-      <widget class="QSpinBox" name="BuchungStart">
-       <property name="maximum">
-        <number>99999999</number>
+     <item row="6" column="1">
+      <widget class="QPushButton" name="BuchungAnlegen">
+       <property name="text">
+        <string>Buchung anlegen</string>
        </property>
+      </widget>
+     </item>
+     <item row="4" column="1">
+      <widget class="QTabWidget" name="tabWidget">
+       <property name="minimumSize">
+        <size>
+         <width>50</width>
+         <height>450</height>
+        </size>
+       </property>
+       <property name="currentIndex">
+        <number>0</number>
+       </property>
+       <widget class="QWidget" name="Flug">
+        <attribute name="title">
+         <string>Flugbuchung</string>
+        </attribute>
+        <layout class="QFormLayout" name="formLayout_7">
+         <item row="1" column="0">
+          <widget class="QLabel" name="label_17">
+           <property name="text">
+            <string>Flughafencode des Abreiseort</string>
+           </property>
+          </widget>
+         </item>
+         <item row="8" column="0">
+          <widget class="QLabel" name="label_18">
+           <property name="text">
+            <string>Flughafencode des Ankunftsort</string>
+           </property>
+          </widget>
+         </item>
+         <item row="13" column="0">
+          <widget class="QLabel" name="label_19">
+           <property name="text">
+            <string>Fluglinie</string>
+           </property>
+          </widget>
+         </item>
+         <item row="14" column="0">
+          <widget class="QLabel" name="label_20">
+           <property name="text">
+            <string>Klasse</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QLineEdit" name="Abreiseort"/>
+         </item>
+         <item row="8" column="1">
+          <widget class="QLineEdit" name="Ankunftsort">
+           <property name="readOnly">
+            <bool>false</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="13" column="1">
+          <widget class="QLineEdit" name="Fluglinie"/>
+         </item>
+         <item row="14" column="1">
+          <widget class="QLineEdit" name="Klasse"/>
+         </item>
+         <item row="0" column="0">
+          <widget class="QLabel" name="label_21">
+           <property name="text">
+            <string>Name des Abreiseortes</string>
+           </property>
+          </widget>
+         </item>
+         <item row="7" column="0">
+          <widget class="QLabel" name="label_22">
+           <property name="text">
+            <string>Name des Ankunftsortes</string>
+           </property>
+          </widget>
+         </item>
+         <item row="7" column="1">
+          <widget class="QLineEdit" name="NameAnkunftsort">
+           <property name="readOnly">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QLineEdit" name="NameAbreiseort">
+           <property name="readOnly">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="6" column="1">
+          <spacer name="verticalSpacer">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeType">
+            <enum>QSizePolicy::Maximum</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>15</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item row="4" column="1">
+          <widget class="QLineEdit" name="FlightLatitudeFromDest">
+           <property name="readOnly">
+            <bool>false</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="5" column="1">
+          <widget class="QLineEdit" name="FlightLongitudeFromDest">
+           <property name="readOnly">
+            <bool>false</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="9" column="1">
+          <widget class="QLineEdit" name="FlightLatitudeToDest">
+           <property name="readOnly">
+            <bool>false</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="11" column="1">
+          <widget class="QLineEdit" name="FlightLongitueTODest">
+           <property name="readOnly">
+            <bool>false</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="5" column="0">
+          <widget class="QLabel" name="label_FlightLongitudeFromDest">
+           <property name="enabled">
+            <bool>true</bool>
+           </property>
+           <property name="text">
+            <string>Longitude des Abreiseortes</string>
+           </property>
+          </widget>
+         </item>
+         <item row="4" column="0">
+          <widget class="QLabel" name="label_FlightLatitudeFromDest">
+           <property name="enabled">
+            <bool>true</bool>
+           </property>
+           <property name="text">
+            <string>Latitude des Abreiseeortes</string>
+           </property>
+          </widget>
+         </item>
+         <item row="9" column="0">
+          <widget class="QLabel" name="label_FlightLatitudeToDest">
+           <property name="enabled">
+            <bool>true</bool>
+           </property>
+           <property name="text">
+            <string>Latitude des Ankunftsortes</string>
+           </property>
+          </widget>
+         </item>
+         <item row="11" column="0">
+          <widget class="QLabel" name="label_FLightLongitudeToDest">
+           <property name="enabled">
+            <bool>true</bool>
+           </property>
+           <property name="frameShadow">
+            <enum>QFrame::Plain</enum>
+           </property>
+           <property name="text">
+            <string>Longitude des Ankunftsortes</string>
+           </property>
+           <property name="textFormat">
+            <enum>Qt::PlainText</enum>
+           </property>
+          </widget>
+         </item>
+         <item row="12" column="1">
+          <spacer name="verticalSpacer_2">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeType">
+            <enum>QSizePolicy::Maximum</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>15</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="Hotel">
+        <attribute name="title">
+         <string>Hotelbuchung</string>
+        </attribute>
+        <layout class="QFormLayout" name="formLayout_5">
+         <item row="0" column="0">
+          <widget class="QLabel" name="label_10">
+           <property name="text">
+            <string>Hotel                                   </string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QLineEdit" name="Hotel_2"/>
+         </item>
+         <item row="4" column="0">
+          <widget class="QLabel" name="label_11">
+           <property name="text">
+            <string>Stadt</string>
+           </property>
+          </widget>
+         </item>
+         <item row="4" column="1">
+          <widget class="QLineEdit" name="Stadt"/>
+         </item>
+         <item row="5" column="0">
+          <widget class="QLabel" name="label_12">
+           <property name="text">
+            <string>Zimmertyp</string>
+           </property>
+          </widget>
+         </item>
+         <item row="5" column="1">
+          <widget class="QLineEdit" name="Zimmertyp"/>
+         </item>
+         <item row="1" column="1">
+          <widget class="QLineEdit" name="HotelLatitude"/>
+         </item>
+         <item row="2" column="1">
+          <widget class="QLineEdit" name="HotelLongitude"/>
+         </item>
+         <item row="1" column="0">
+          <widget class="QLabel" name="label_HotelLatitude">
+           <property name="text">
+            <string>Latitude des Hotels</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="0">
+          <widget class="QLabel" name="label_HotelLongitude">
+           <property name="text">
+            <string>Longitude des Hotels</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="1">
+          <spacer name="verticalSpacer_3">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeType">
+            <enum>QSizePolicy::Maximum</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>30</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="Wagen">
+        <attribute name="title">
+         <string>Mietwagenreservierung</string>
+        </attribute>
+        <layout class="QFormLayout" name="formLayout_6">
+         <item row="0" column="0">
+          <widget class="QLabel" name="label_13">
+           <property name="text">
+            <string>Abholort                         </string>
+           </property>
+          </widget>
+         </item>
+         <item row="4" column="0">
+          <widget class="QLabel" name="label_14">
+           <property name="text">
+            <string>Rückgabeort</string>
+           </property>
+          </widget>
+         </item>
+         <item row="8" column="0">
+          <widget class="QLabel" name="label_15">
+           <property name="text">
+            <string>Firma</string>
+           </property>
+          </widget>
+         </item>
+         <item row="9" column="0">
+          <widget class="QLabel" name="label_16">
+           <property name="text">
+            <string>Fahrzeugklasse</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QLineEdit" name="Abholort"/>
+         </item>
+         <item row="4" column="1">
+          <widget class="QLineEdit" name="Rueckgabeort"/>
+         </item>
+         <item row="8" column="1">
+          <widget class="QLineEdit" name="Firma"/>
+         </item>
+         <item row="9" column="1">
+          <widget class="QLineEdit" name="Fahrzeugklasse"/>
+         </item>
+         <item row="1" column="1">
+          <widget class="QLineEdit" name="CarLantitudeFromDest"/>
+         </item>
+         <item row="2" column="1">
+          <widget class="QLineEdit" name="CarLongitudeFromDest"/>
+         </item>
+         <item row="5" column="1">
+          <widget class="QLineEdit" name="CarLantitudeToDest"/>
+         </item>
+         <item row="6" column="1">
+          <widget class="QLineEdit" name="CarLongitudeToDest"/>
+         </item>
+         <item row="1" column="0">
+          <widget class="QLabel" name="label_CarLantitudeFromDest">
+           <property name="text">
+            <string>Lantitude des Abholortes</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="0">
+          <widget class="QLabel" name="label_CarLongitudeFromDest">
+           <property name="text">
+            <string>Longitude des Abholortes</string>
+           </property>
+          </widget>
+         </item>
+         <item row="5" column="0">
+          <widget class="QLabel" name="label_CarLantitudeToDest">
+           <property name="text">
+            <string>Latitude des Abholortes</string>
+           </property>
+          </widget>
+         </item>
+         <item row="6" column="0">
+          <widget class="QLabel" name="label_CarLongitudeToDest">
+           <property name="text">
+            <string>Longitude des Abholortes</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="1">
+          <spacer name="verticalSpacer_4">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeType">
+            <enum>QSizePolicy::Maximum</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>30</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item row="7" column="1">
+          <spacer name="verticalSpacer_5">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeType">
+            <enum>QSizePolicy::Maximum</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>30</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </widget>
       </widget>
      </item>
     </layout>
@@ -610,7 +805,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1139</width>
+     <width>1164</width>
      <height>25</height>
     </rect>
    </property>
@@ -621,7 +816,22 @@
     <addaction name="separator"/>
     <addaction name="actionEinlesen"/>
    </widget>
+   <widget class="QMenu" name="menuKund_innen">
+    <property name="title">
+     <string>Kund*innen</string>
+    </property>
+    <addaction name="actionNeue_Kunde_anlegen"/>
+    <addaction name="actionKund_innensuche"/>
+   </widget>
+   <widget class="QMenu" name="menuBuchungen">
+    <property name="title">
+     <string>Buchungen</string>
+    </property>
+    <addaction name="actionNeue_Buchung_anlegen"/>
+   </widget>
    <addaction name="menuDatei"/>
+   <addaction name="menuKund_innen"/>
+   <addaction name="menuBuchungen"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionEinlesen">
@@ -645,6 +855,21 @@
   <action name="actionNach_ID_suchen">
    <property name="text">
     <string>Nach ID suchen...</string>
+   </property>
+  </action>
+  <action name="actionNeue_Kunde_anlegen">
+   <property name="text">
+    <string>Neue Kunde anlegen...</string>
+   </property>
+  </action>
+  <action name="actionNeue_Buchung_anlegen">
+   <property name="text">
+    <string>Neue Buchung anlegen...</string>
+   </property>
+  </action>
+  <action name="actionKund_innensuche">
+   <property name="text">
+    <string>Kund*innensuche...</string>
    </property>
   </action>
  </widget>

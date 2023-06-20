@@ -42,3 +42,13 @@ void HotelBooking::setRoomType(const std::string &newRoomType)
 {
     roomType = newRoomType;
 }
+
+std::string HotelBooking::getHotelLatitude() const
+{
+    return hotelLatitude;
+}
+
+std::string HotelBooking::getHotelLongitude() const
+{
+    return hotelLongitude;
+}

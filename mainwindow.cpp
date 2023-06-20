@@ -7,6 +7,8 @@
 #include <QDate>
 #include <QInputDialog>
 #include <QTableWidget>
+#include <QDesktopServices>
+#include <QUuid>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -15,6 +17,40 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     ui->Speichern->setDisabled(true);
     ui->Abbrechen->setDisabled(true);
+    ui->BuchungAnlegen->setVisible(false);
+
+    /*Tabs in Buchungsdetails*/
+    ui->tabWidget->setTabVisible(0,false);
+    ui->tabWidget->setTabVisible(1,false);
+    ui->tabWidget->setTabVisible(2,false);
+
+    /*Flight Coordinates*/
+    ui->label_FLightLongitudeToDest->setVisible(false);
+    ui->label_FlightLatitudeToDest->setVisible(false);
+    ui->label_FlightLongitudeFromDest->setVisible(false);
+    ui->label_FlightLatitudeFromDest->setVisible(false);
+    ui->FlightLatitudeToDest->setVisible(false);
+    ui->FlightLongitueTODest->setVisible(false);
+    ui->FlightLatitudeFromDest->setVisible(false);
+    ui->FlightLongitudeFromDest->setVisible(false);
+
+    /*Hotel Coordinates*/
+    ui->label_HotelLatitude->setVisible(false);
+    ui->label_HotelLongitude->setVisible(false);
+    ui->HotelLatitude->setVisible(false);
+    ui->HotelLongitude->setVisible(false);
+
+    /*Car Coordinates*/
+    ui->label_CarLantitudeFromDest->setVisible(false);
+    ui->label_CarLongitudeFromDest->setVisible(false);
+    ui->label_CarLantitudeToDest->setVisible(false);
+    ui->label_CarLongitudeToDest->setVisible(false);
+    ui->CarLantitudeFromDest->setVisible(false);
+    ui->CarLongitudeFromDest->setVisible(false);
+    ui->CarLantitudeToDest->setVisible(false);
+    ui->CarLongitudeToDest->setVisible(false);
+
+    /*Interface Init*/
     interface = std::make_shared<TravelAgency>();
 }
 
@@ -139,7 +175,9 @@ void MainWindow::setCustomerInfo(std::shared_ptr<Customer> customer)
     ui->KundeName->setText(QString::fromStdString(customer->getName()));
 }
 
-void MainWindow::on_pushButton_clicked()
+
+
+void MainWindow::on_actionKund_innensuche_triggered()
 {
     //Alles reinigen, wenn man einen anderen Kunde sucht
 
@@ -166,7 +204,6 @@ void MainWindow::on_pushButton_clicked()
     }
 
     setCustomerInfo(customer);
-
 }
 
 QTableWidgetItem* sharedItem;
@@ -176,13 +213,14 @@ void MainWindow::on_tableWidget_itemDoubleClicked(QTableWidgetItem *item)
 
     ui->tableWidget_2->clearContents();
 
-    ui->BuchungsID->clear();
-    ui->BuchungStart->clear();
-    ui->BuchungEnde->clear();
-    ui->BuchungPreis->clear();
-    ui->tabWidget->setTabVisible(0,false);
-    ui->tabWidget->setTabVisible(1,false);
-    ui->tabWidget->setTabVisible(2,false);
+
+//        ui->BuchungsID->clear();
+//        ui->BuchungStart->clear();
+//        ui->BuchungEnde->clear();
+//        ui->BuchungPreis->clear();
+//        ui->tabWidget->setTabVisible(0,false);
+//        ui->tabWidget->setTabVisible(1,false);
+//        ui->tabWidget->setTabVisible(2,false);
 
 
     // Reise ID =>
@@ -457,6 +495,93 @@ void MainWindow::on_Abbrechen_clicked()
 }
 
 
+void MainWindow::on_button_gps_clicked()
+{
+
+    int travelId = ui->ReiseID->toPlainText().toInt();
+
+    std::shared_ptr<Travel> travel = interface->findTravel(travelId);
+
+    if (travel == nullptr) {
+        // Reise nicht gefunden
+        return;
+    }
+
+    std::vector<std::shared_ptr<Booking>> bookings = travel->getTravelBookings();
+
+    // Sammlung für GeoJSON-Features erstellen
+    QString featureCollection = "{\"type\":\"FeatureCollection\",\"features\":[";
+    QString coordinates;
+    QString feature;
+
+    for (auto booking: bookings) {
+
+        if (booking->getType() == "Hotel") {
+            std::shared_ptr<HotelBooking> hotelBooking = std::dynamic_pointer_cast<HotelBooking>(booking);
+            QString hotelLatitude = QString::fromStdString(hotelBooking->getHotelLatitude());
+            QString hotelLongitude = QString::fromStdString(hotelBooking->getHotelLongitude());
+            coordinates = QString("[%1,%2]").arg(hotelLongitude, hotelLatitude);
+
+            // GeoJSON-Feature für die Buchung erstellen
+            feature = QString("{\"type\":\"Feature\",\"geometry\":{\"type\":\"Point\",\"coordinates\":%1},\"properties\":{\"Hotel\":\"%2\"}}")
+                          .arg(coordinates, QString::fromStdString(booking->getHotel()));
+
+        } else if (booking->getType() == "RentalCar") {
+            std::shared_ptr<RentalCarReservation> carBooking = std::dynamic_pointer_cast<RentalCarReservation>(booking);
+            QString pickupLatitude = QString::fromStdString(carBooking->getPickupLatitude());
+            QString pickupLongitude = QString::fromStdString(carBooking->getPickupLongitude());
+            QString returnLatitude = QString::fromStdString(carBooking->getReturnLatitude());
+            QString returnLongitude = QString::fromStdString(carBooking->getReturnLongitude());
+
+            if(pickupLatitude == returnLatitude && pickupLongitude == returnLongitude){
+                coordinates = QString("[%1,%2]").arg(pickupLongitude, pickupLatitude);
+                // GeoJSON-Feature für die Buchung erstellen
+                feature = QString("{\"type\":\"Feature\",\"geometry\":{\"type\":\"Point\",\"coordinates\":%1},\"properties\":{\"PickupStation\":\"%2\",\"ReturnStation\":\"%3\",\"Company\":\"%4\"}}")
+                              .arg(coordinates, QString::fromStdString(carBooking->getPickupLocation()), QString::fromStdString(carBooking->getReturnLocation()), QString::fromStdString(carBooking->getCompany()));
+
+            }else{
+                coordinates = QString("[%1,%2],[%3,%4]").arg(pickupLongitude, pickupLatitude, returnLongitude, returnLatitude);
+
+                // GeoJSON-Feature für die Buchung erstellen
+                feature = QString("{\"type\":\"Feature\",\"geometry\":{\"type\":\"LineString\",\"coordinates\":[%1]},\"properties\":{\"PickupStation\":\"%2\",\"ReturnStation\":\"%3\",\"Company\":\"%4\"}}")
+                              .arg(coordinates, QString::fromStdString(carBooking->getPickupLocation()), QString::fromStdString(carBooking->getReturnLocation()), QString::fromStdString(carBooking->getCompany()));
+            }
+
+
+
+        } else if (booking->getType() == "Flight") {
+            std::shared_ptr<FlightBooking> flightBooking = std::dynamic_pointer_cast<FlightBooking>(booking);
+            QString startLatitude = QString::fromStdString(flightBooking->getFromDestLatitude());
+            QString startLongitude = QString::fromStdString(flightBooking->getFromDestLongitude());
+            QString endLatitude = QString::fromStdString(flightBooking->getToDestLatitude());
+            QString endLongitude = QString::fromStdString(flightBooking->getToDestLongitude());
+            coordinates = QString("[%1,%2],[%3,%4]").arg(startLongitude, startLatitude, endLongitude, endLatitude);
+
+            // GeoJSON-Feature für die Buchung erstellen
+            feature = QString("{\"type\":\"Feature\",\"geometry\":{\"type\":\"LineString\",\"coordinates\":[%1]},\"properties\":{\"From Destination\":\"%2\",\"To Destination\":\"%3\"}}")
+                          .arg(coordinates, QString::fromStdString(flightBooking->getfromDestination()), QString::fromStdString(flightBooking->getToDestination()));
+        }
+
+
+
+        // Feature zur Sammlung hinzufügen
+        featureCollection += feature + ",";
+    }
+
+
+    featureCollection.chop(1);
+    featureCollection += "]}";
+
+
+    QString mapUrl = "http://townsendjennings.com/geo/?geojson=" + QUrl::toPercentEncoding(featureCollection);
+
+
+    QDesktopServices::openUrl(QUrl(mapUrl));
+}
+
+
+
+
 void MainWindow::on_BuchungStart_valueChanged(int arg1)
 {
     ui->Speichern->setEnabled(true);
@@ -552,5 +677,295 @@ void MainWindow::on_Fahrzeugklasse_textChanged(const QString &arg1)
 {
     ui->Speichern->setEnabled(true);
     ui->Abbrechen->setEnabled(true);
+}
+
+
+
+
+
+void MainWindow::on_actionNeue_Kunde_anlegen_triggered()
+{
+    int maxId = 0;
+    for(auto customer: interface->getAllCustomers()){
+        if(customer->getId() > maxId){
+            maxId = customer->getId();
+        }
+    }
+
+    int newId = ++maxId;
+
+    QString newName = QInputDialog::getText(this, "Neue Kunde anlegen...", "Geben Sie bitte die Name ein:");
+
+    std::shared_ptr<Customer> newCustomer = std::make_shared<Customer>(Customer(newId, newName.toStdString()));
+
+    interface->addCustomer(newCustomer);
+
+    QMessageBox::information(this, "Erflogreich!", newName + " ist erfolgreich mit ID " + QString::number(newId) + " angelegt!");
+}
+
+
+void MainWindow::on_actionNeue_Buchung_anlegen_triggered()
+{
+    ui->groupBox->setVisible(false);
+    ui->groupBox_2->setVisible(false);
+    ui->groupBox_3->setEnabled(true);
+
+    ui->Speichern->setVisible(false);
+    ui->Abbrechen->setVisible(false);
+    ui->BuchungAnlegen->setVisible(true);
+
+
+
+    QStringList items = {"Flugbuchung", "Hotelbuchung", "Mietwagenreservierung"};
+
+    QString bookingType = QInputDialog::getItem(this, "Buchungstyp", "Wählen Sie bitte den Buchungstyp: ", items);
+
+    if(bookingType == "Flugbuchung"){
+        ui->tabWidget->setTabVisible(0,true);
+        ui->tabWidget->setTabVisible(1,false);
+        ui->tabWidget->setTabVisible(2,false);
+
+        /*Flight Coordinates*/
+        ui->label_FLightLongitudeToDest->setVisible(true);
+        ui->label_FlightLatitudeToDest->setVisible(true);
+        ui->label_FlightLongitudeFromDest->setVisible(true);
+        ui->label_FlightLatitudeFromDest->setVisible(true);
+        ui->FlightLatitudeToDest->setVisible(true);
+        ui->FlightLongitueTODest->setVisible(true);
+        ui->FlightLatitudeFromDest->setVisible(true);
+        ui->FlightLongitudeFromDest->setVisible(true);
+
+    }else if(bookingType == "Hotelbuchung"){
+        ui->tabWidget->setTabVisible(0,false);
+        ui->tabWidget->setTabVisible(1,true);
+        ui->tabWidget->setTabVisible(2,false);
+
+        /*Hotel Coordinates*/
+        ui->label_HotelLatitude->setVisible(true);
+        ui->label_HotelLongitude->setVisible(true);
+        ui->HotelLatitude->setVisible(true);
+        ui->HotelLongitude->setVisible(true);
+
+    }else if(bookingType == "Mietwagenreservierung"){
+        ui->tabWidget->setTabVisible(0,false);
+        ui->tabWidget->setTabVisible(1,false);
+        ui->tabWidget->setTabVisible(2,true);
+
+        /*Car Coordinates*/
+        ui->label_CarLantitudeFromDest->setVisible(true);
+        ui->label_CarLongitudeFromDest->setVisible(true);
+        ui->label_CarLantitudeToDest->setVisible(true);
+        ui->label_CarLongitudeToDest->setVisible(true);
+        ui->CarLantitudeFromDest->setVisible(true);
+        ui->CarLongitudeFromDest->setVisible(true);
+        ui->CarLantitudeToDest->setVisible(true);
+        ui->CarLongitudeToDest->setVisible(true);
+
+    }
+}
+
+
+
+
+
+void MainWindow::on_BuchungAnlegen_clicked()
+{
+    /*Customer eingeben*/
+    QString tmp1 = QInputDialog::getText(this, "Speichern unter...", "Kunde ID: ");
+    int customerId = tmp1.toInt();
+
+    if(not interface->findCustomer(customerId)){
+        QMessageBox::warning(this, "Fehler!", "Es gibt keinen Kunde mit ID " + tmp1);
+        return;
+    }
+
+    /*Travel eingeben*/
+    QStringList items;
+    for(auto travel: interface->findCustomer(customerId)->getTravelList()){
+        items.push_back(QString::number(travel->getId()));
+    }
+    items.push_back("Neue Reise...");
+
+    QString item = QInputDialog::getItem(this, "Speichern unter...", "Reise ID: ", items);
+    int travelId;
+    if(item == "Neue Reise..."){
+        int maxId = 0;
+        for(auto travel: interface->getAllTravels()){
+            if(travel->getId() > maxId){
+                maxId = travel->getId();
+            }
+        }
+        travelId = ++maxId;
+    }else{
+        travelId = item.toInt();
+    }
+
+
+    /*Attributen fuer Booking speichern*/
+    QString newId = QUuid::createUuid().toString();
+    ui->BuchungsID->setText(newId);
+
+    std::string fromDate = std::to_string(ui->BuchungStart->value());
+    std::string toDate = std::to_string(ui->BuchungEnde->value());
+    double price = ui->BuchungPreis->value();
+
+    std::shared_ptr<Booking> pBooking = nullptr;
+
+    if(ui->tabWidget->isTabVisible(0)/*Flight*/){
+
+        std::string fromDestCode = ui->Abreiseort->text().toStdString();
+        std::string toDestCode = ui->Ankunftsort->text().toStdString();
+
+        if(interface->findAirport(fromDestCode)){
+            std::string fromDestName = interface->findAirport(fromDestCode)->getName();
+            ui->NameAbreiseort->setStyleSheet("color:Black;");
+            ui->NameAbreiseort->setText(QString::fromStdString(fromDestName));
+        }else{
+            QMessageBox::warning(this, "Fehler", "Ungültiger Iata-Code in Abreiseort");
+            ui->NameAbreiseort->setStyleSheet("color:Red;");
+            ui->NameAbreiseort->setText("Ungültiger Iata-Code");
+            return;
+        }
+
+        if(interface->findAirport(toDestCode)){
+            std::string toDestName = interface->findAirport(toDestCode)->getName();
+            ui->NameAnkunftsort->setStyleSheet("color:Black;");
+            ui->NameAnkunftsort->setText(QString::fromStdString(toDestName));
+        }else{
+            QMessageBox::warning(this, "Fehler", "Ungültiger Iata-Code in Ankunftsort");
+            ui->NameAnkunftsort->setStyleSheet("color:Red;");
+            ui->NameAnkunftsort->setText("Ungültiger Iata-Code");
+            return;
+        }
+
+        std::string airline = ui->Fluglinie->text().toStdString();
+
+        std::string bookingClass;
+        std::string bookingClassFull = ui->Klasse->text().toStdString();
+        if(bookingClassFull == "Economy"){
+            bookingClass = "Y";
+        }else if(bookingClassFull == "Premium Economy"){
+            bookingClass = "W";
+        }else if(bookingClassFull == "Business"){
+            bookingClass = "J";
+        }else if(bookingClassFull == "First"){
+            bookingClass = "F";
+        }else{
+            bookingClass = "Falsche Eingabe!";
+        }
+
+        std::string fromDestLatitude = ui->FlightLatitudeFromDest->text().toStdString();
+        std::string fromDestLongitude = ui->FlightLongitudeFromDest->text().toStdString();
+        std::string toDestLatitude = ui->FlightLatitudeToDest->text().toStdString();
+        std::string toDestLongitude = ui->FlightLongitueTODest->text().toStdString();
+
+        pBooking = std::make_shared<FlightBooking>(FlightBooking(travelId, "Flight", fromDestCode, toDestCode, airline,
+                                                                 newId.toStdString(), price, fromDate, toDate, bookingClass,
+                                                                 fromDestLatitude, fromDestLongitude, toDestLatitude, toDestLongitude));
+
+    }else if(ui->tabWidget->isTabVisible(1)/*Hotel*/){
+        std::string hotel = ui->Hotel_2->text().toStdString();
+        std::string hotelLatitude = ui->HotelLatitude->text().toStdString();
+        std::string hotelLongitude = ui->HotelLongitude->text().toStdString();
+
+        std::string town = ui->Stadt->text().toStdString();
+
+        std::string roomTypeFull = ui->Zimmertyp->text().toStdString();
+        std::string roomType;
+        if(roomTypeFull == "Einzelzimmer"){
+            roomType = "EZ";
+        }else if(roomTypeFull == "Doppelzimmer"){
+            roomType = "DZ";
+        }else if(roomTypeFull == "Appartment"){
+            roomType = "AP";
+        }else if(roomTypeFull == "Suite"){
+            roomType = "SU";
+        }else{
+            roomType = "Falsche Eingabe!";
+        }
+
+        pBooking = std::make_shared<HotelBooking>(HotelBooking(travelId, "Hotel", hotel, town, newId.toStdString(), price, fromDate, toDate,
+                                                               roomType, hotelLatitude, hotelLongitude));
+
+
+
+    }else if(ui->tabWidget->isTabVisible(2)/*Car*/){
+        std::string pickupLocation = ui->Abholort->text().toStdString();
+        std::string pickupLatitude = ui->CarLantitudeFromDest->text().toStdString();
+        std::string pickupLongitude =  ui->CarLongitudeFromDest->text().toStdString();;
+
+        std::string returnLocation = ui->Rueckgabeort->text().toStdString();
+        std::string returnLatitude =  ui->CarLantitudeToDest->text().toStdString();;
+        std::string returnLongitude =  ui->CarLongitudeToDest->text().toStdString();;
+
+        std::string company = ui->Firma->text().toStdString();
+        std::string vehicleClass = ui->Fahrzeugklasse->text().toStdString();
+
+        pBooking = std::make_shared<RentalCarReservation>(RentalCarReservation(travelId, "RentalCar", pickupLocation, returnLocation, company,
+                                                                               newId.toStdString(), price, fromDate, toDate, vehicleClass,
+                                                                               pickupLatitude, pickupLongitude, returnLatitude, returnLongitude));
+    }
+
+    /*Eingegebene Reise schon bereits existiert*/
+    if(interface->findTravel(travelId)){
+        interface->addBooking(pBooking);
+        interface->findTravel(travelId)->addBooking(pBooking);
+
+    }else{
+        interface->addBooking(pBooking);
+
+        std::shared_ptr<Travel> newTravel = std::make_shared<Travel>(Travel(travelId,customerId));
+        newTravel->addBooking(pBooking);
+        interface->addTravel(newTravel);
+
+        interface->findCustomer(customerId)->addTravel(newTravel);
+    }
+
+    /*Alle GroupBoxes einblenden*/
+    ui->groupBox->setVisible(true);
+    ui->groupBox_2->setVisible(true);
+    ui->groupBox_3->setEnabled(true);
+
+    /*Knopf wechseln*/
+    ui->Speichern->setVisible(true);
+    ui->Abbrechen->setVisible(true);
+    ui->BuchungAnlegen->setVisible(false);
+
+    /*Buchungsdeails aufraeumen*/
+    ui->BuchungsID->clear();
+    ui->BuchungStart->clear();
+    ui->BuchungEnde->clear();
+    ui->BuchungPreis->clear();
+
+        /*Flight Coordinates*/
+    ui->label_FLightLongitudeToDest->setVisible(false);
+    ui->label_FlightLatitudeToDest->setVisible(false);
+    ui->label_FlightLongitudeFromDest->setVisible(false);
+    ui->label_FlightLatitudeFromDest->setVisible(false);
+    ui->FlightLatitudeToDest->setVisible(false);
+    ui->FlightLongitueTODest->setVisible(false);
+    ui->FlightLatitudeFromDest->setVisible(false);
+    ui->FlightLongitudeFromDest->setVisible(false);
+
+        /*Hotel Coordinates*/
+    ui->label_HotelLatitude->setVisible(false);
+    ui->label_HotelLongitude->setVisible(false);
+    ui->HotelLatitude->setVisible(false);
+    ui->HotelLongitude->setVisible(false);
+
+        /*Car Coordinates*/
+    ui->label_CarLantitudeFromDest->setVisible(false);
+    ui->label_CarLongitudeFromDest->setVisible(false);
+    ui->label_CarLantitudeToDest->setVisible(false);
+    ui->label_CarLongitudeToDest->setVisible(false);
+    ui->CarLantitudeFromDest->setVisible(false);
+    ui->CarLongitudeFromDest->setVisible(false);
+    ui->CarLantitudeToDest->setVisible(false);
+    ui->CarLongitudeToDest->setVisible(false);
+
+    /*Tabs in Buchungsdetails*/
+    ui->tabWidget->setTabVisible(0,false);
+    ui->tabWidget->setTabVisible(1,false);
+    ui->tabWidget->setTabVisible(2,false);
 }
 

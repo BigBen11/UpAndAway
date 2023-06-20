@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QtTest/QTest>
+#include "travelagency.h"
 
 class Test : public QObject
 {
@@ -10,8 +11,12 @@ class Test : public QObject
 public:
     explicit Test(QObject *parent = nullptr);
 
+private:
+    TravelAgency travelAgency;
 private slots:
-    void test();
+    void testReantalCarReservation();
+    void testFlightBooking();
+    void testHotelBooking();
 
 };
 

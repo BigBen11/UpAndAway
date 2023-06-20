@@ -35,3 +35,23 @@ RentalCarReservation::RentalCarReservation(int travelId, std::string type, std::
  {
      vehicleClass = newVehicleClass;
  }
+
+ std::string RentalCarReservation::getPickupLatitude() const
+ {
+     return pickupLatitude;
+ }
+
+ std::string RentalCarReservation::getPickupLongitude() const
+ {
+     return pickupLongitude;
+ }
+
+ std::string RentalCarReservation::getReturnLatitude() const
+ {
+     return returnLatitude;
+ }
+
+ std::string RentalCarReservation::getReturnLongitude() const
+ {
+     return returnLongitude;
+ }

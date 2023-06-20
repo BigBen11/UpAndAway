@@ -20,6 +20,10 @@ public:
     void setTown(const std::string &newTown);
     void setRoomType(const std::string &newRoomType);
 
+    std::string getHotelLatitude() const;
+
+    std::string getHotelLongitude() const;
+
 private:
     std::string hotel;
     std::string town;

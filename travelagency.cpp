@@ -282,3 +282,13 @@ std::shared_ptr<Airport> TravelAgency::findAirport(std::string iata_code){
     return nullptr;
 }
 
+std::vector<std::shared_ptr<Customer> > TravelAgency::getAllCustomers() const
+{
+    return allCustomers;
+}
+
+std::vector<std::shared_ptr<Travel> > TravelAgency::getAllTravels() const
+{
+    return allTravels;
+}
+

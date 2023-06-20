@@ -24,6 +24,14 @@ public:
 
     void setBookingClass(const std::string &newBookingClass);
 
+    std::string getFromDestLatitude() const;
+
+    std::string getFromDestLongitude() const;
+
+    std::string getToDestLatitude() const;
+
+    std::string getToDestLongitude() const;
+
 private:
     std::string fromDestination;
     std::string toDestination;
