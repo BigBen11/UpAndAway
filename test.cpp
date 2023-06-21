@@ -29,7 +29,8 @@ void Test::testFlightBooking(){
         }
     }
 
-    QCOMPARE(cnt, 4);   //Aufgabestellung = 3
+    QCOMPARE(cnt, 3);
+
 }
 
 void Test::testHotelBooking(){

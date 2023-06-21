@@ -3,6 +3,7 @@
 #include "errorwindow.h"
 #include "QTextBrowser"
 #include "errorwindow.h"
+#include <fstream>
 
 #include <QDate>
 #include <QInputDialog>
@@ -59,12 +60,13 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+QString currentFilename;
 void MainWindow::on_actionEinlesen_triggered()
 {
-    QString filename = QFileDialog::getOpenFileName(this, tr("Open File"), "C://", "All Files (*.*);;Text File(*.txt);;Json File(*.json)");
+    currentFilename = QFileDialog::getOpenFileName(this, tr("Open File"), "C://", "All Files (*.*);;Text File(*.txt);;Json File(*.json)");
 
     try {
-        interface->readFile(filename.toStdString());
+        interface->readFile(currentFilename.toStdString());
 
         QString info(interface->getInfo().c_str());
 
@@ -359,9 +361,42 @@ void MainWindow::on_tableWidget_2_itemDoubleClicked(QTableWidgetItem *item)
 
 }
 
+void sortJson(QWidget* parent, nlohmann::json& json){
+    QStringList items = {"Price" , "From Date", "To Date", "Travel ID"};
+    QString item = QInputDialog::getItem(parent, "Sortieren...", "Wählen Sie das passende Sortierkriterium:", items);
+
+        if(item == "Price"){
+        std::sort(json.begin(), json.end(), [](const nlohmann::json& a, const nlohmann::json& b) {
+            return a["price"] < b["price"];
+        });
+    }else if(item == "From Date"){
+        std::sort(json.begin(), json.end(), [](const nlohmann::json& a, const nlohmann::json& b) {
+            return a["fromDate"].get<std::string>() < b["fromDate"].get<std::string>();
+        });
+    }else if(item == "To Date"){
+        std::sort(json.begin(), json.end(), [](const nlohmann::json& a, const nlohmann::json& b) {
+            return a["toDate"].get<std::string>() < b["toDate"].get<std::string>();
+        });
+    }else if(item == "Travel ID"){
+        std::sort(json.begin(), json.end(), [](const nlohmann::json& a, const nlohmann::json& b) {
+            return a["travelId"] < b["travelId"];
+        });
+    }
+}
 
 void MainWindow::on_Speichern_clicked()
 {
+    // Laden der JSON-Datei
+    std::ifstream jsonFileIn(currentFilename.toStdString());
+    if (!jsonFileIn.is_open()) {
+        QMessageBox::critical(this, "Fehler!", "Fehler beim Öffnen der JSON-Datei.");
+            return;
+    }
+    nlohmann::json json;
+    jsonFileIn >> json;
+    jsonFileIn.close();
+
+
     std::string fromDate = std::to_string(ui->BuchungStart->value());
     std::string toDate = std::to_string(ui->BuchungEnde->value());
     double price = ui->BuchungPreis->value();
@@ -434,6 +469,23 @@ void MainWindow::on_Speichern_clicked()
         flight->setBookingClass(bookingClass);
         flightInTravel->setBookingClass(bookingClass);
 
+        /*JSON*/
+        for (auto& booking : json) {
+            if (booking["id"] == ui->BuchungsID->toPlainText().toStdString()) {
+                // Überschreiben Booking
+                booking["airline"] = ui->Fluglinie->text().toStdString();
+                booking["bookingClass"] = bookingClass;
+                booking["fromDate"] = fromDate;
+                booking["fromDest"] = fromDestCode;
+                booking["price"] = price;
+                booking["toDate"] = toDate;
+                booking["toDest"] = toDestCode;
+                break;
+            }
+        }
+
+
+
     }else if(type == "Hotel"){
         std::shared_ptr<HotelBooking> hotel = std::dynamic_pointer_cast<HotelBooking> (booking);
         std::shared_ptr<HotelBooking> hotelInTravel = std::dynamic_pointer_cast<HotelBooking> (bookingInTravel);
@@ -460,6 +512,20 @@ void MainWindow::on_Speichern_clicked()
         hotel->setRoomType(roomType);
         hotelInTravel->setRoomType(roomType);
 
+        /*JSON*/
+        for (auto& booking : json) {
+            if (booking["id"] == ui->BuchungsID->toPlainText().toStdString()) {
+                // Überschreiben Booking
+                booking["fromDate"] = fromDate;
+                booking["hotel"] = ui->Hotel_2->text().toStdString();
+                booking["price"] = price;
+                booking["roomType"] = roomType;
+                booking["toDate"] = toDate;
+                booking["town"] =  ui->Stadt->text().toStdString();
+                break;
+            }
+        }
+
     }else if(type == "RentalCar"){
         std::shared_ptr<RentalCarReservation> car = std::dynamic_pointer_cast<RentalCarReservation> (booking);
         std::shared_ptr<RentalCarReservation> carInTravel = std::dynamic_pointer_cast<RentalCarReservation> (bookingInTravel);
@@ -472,7 +538,38 @@ void MainWindow::on_Speichern_clicked()
         carInTravel->setCompany(ui->Firma->text().toStdString());
         car->setVehicleClass(ui->Fahrzeugklasse->text().toStdString());
         carInTravel->setVehicleClass(ui->Fahrzeugklasse->text().toStdString());
+
+        /*JSON*/
+        for (auto& booking : json) {
+            if (booking["id"] == ui->BuchungsID->toPlainText().toStdString()) {
+                // Überschreiben Booking
+                booking["company"] = ui->Firma->text().toStdString();
+                booking["fromDate"] = fromDate;
+                booking["pickupLocation"] = ui->Abholort->text().toStdString();
+                booking["price"] = price;
+                booking["returnLocation"] = ui->Rueckgabeort->text().toStdString();
+                booking["toDate"] = toDate;
+                booking["vehicleClass"] =  ui->Fahrzeugklasse->text().toStdString();
+                break;
+            }
+        }
     }
+
+    /***JSON Sortieren***/
+    sortJson(this, json);
+
+    /***Speichern in Json***/
+
+    std::ofstream jsonFileOut(currentFilename.toStdString());
+    if (!jsonFileOut.is_open()) {
+        QMessageBox::critical(this, "Fehler!", "Fehler beim Öffnen der JSON-Datei zum Schreiben.");
+            return;
+    }
+
+    jsonFileOut << json.dump(4); // Optional: dump(4) für eine formatierte Ausgabe mit Einrückung von 4 Leerzeichen
+    jsonFileOut.close();
+
+
 
     ui->Speichern->setDisabled(true);
     ui->Abbrechen->setDisabled(true);
@@ -480,8 +577,6 @@ void MainWindow::on_Speichern_clicked()
 
     on_tableWidget_itemDoubleClicked(sharedItem);
 
-
-    //setCustomerInfo(interface->findCustomer((ui->KundeID->toPlainText().toInt())));
 
 }
 
@@ -770,6 +865,21 @@ void MainWindow::on_actionNeue_Buchung_anlegen_triggered()
 
 void MainWindow::on_BuchungAnlegen_clicked()
 {
+
+    // Laden der JSON-Datei
+    std::ifstream jsonFileIn(currentFilename.toStdString());
+    if (!jsonFileIn.is_open()) {
+        QMessageBox::critical(this, "Fehler!", "Fehler beim Öffnen der JSON-Datei.");
+            return;
+    }
+
+    nlohmann::json allBookingsJson;
+    jsonFileIn >> allBookingsJson;
+    jsonFileIn.close();
+
+    nlohmann::json newBookingJson;
+
+
     /*Customer eingeben*/
     QString tmp1 = QInputDialog::getText(this, "Speichern unter...", "Kunde ID: ");
     int customerId = tmp1.toInt();
@@ -863,6 +973,27 @@ void MainWindow::on_BuchungAnlegen_clicked()
                                                                  newId.toStdString(), price, fromDate, toDate, bookingClass,
                                                                  fromDestLatitude, fromDestLongitude, toDestLatitude, toDestLongitude));
 
+
+        newBookingJson = {
+                {"airline", airline},
+                {"bookingClass", bookingClass},
+                {"customerId", customerId},
+                {"customerName", interface->findCustomer(customerId)->getName()},
+                {"fromDate", fromDate},
+                {"fromDest", fromDestCode},
+                {"fromDestLatitude", fromDestLatitude},
+                {"fromDestLongitude", fromDestLongitude},
+                {"id", newId.toStdString()},
+                {"price", price},
+                {"toDate", toDate},
+                {"toDest", toDestCode},
+                {"toDestLatitude", toDestLatitude},
+                {"toDestLongitude", toDestLongitude},
+                {"travelId", travelId},
+                {"type", "Flight"}
+        };
+
+
     }else if(ui->tabWidget->isTabVisible(1)/*Hotel*/){
         std::string hotel = ui->Hotel_2->text().toStdString();
         std::string hotelLatitude = ui->HotelLatitude->text().toStdString();
@@ -888,6 +1019,21 @@ void MainWindow::on_BuchungAnlegen_clicked()
                                                                roomType, hotelLatitude, hotelLongitude));
 
 
+        newBookingJson = {
+            {"customerId", customerId},
+            {"customerName", interface->findCustomer(customerId)->getName()},
+            {"fromDate", fromDate},
+            {"hotel", hotel},
+            {"hotelLatitude", hotelLatitude},
+            {"hotelLongitude", hotelLongitude},
+            {"id", newId.toStdString()},
+            {"price", price},
+            {"roomType", roomType},
+            {"toDate", toDate},
+            {"town", town},
+            {"travelId", travelId},
+            {"type", "Hotel"}
+        };
 
     }else if(ui->tabWidget->isTabVisible(2)/*Car*/){
         std::string pickupLocation = ui->Abholort->text().toStdString();
@@ -904,6 +1050,25 @@ void MainWindow::on_BuchungAnlegen_clicked()
         pBooking = std::make_shared<RentalCarReservation>(RentalCarReservation(travelId, "RentalCar", pickupLocation, returnLocation, company,
                                                                                newId.toStdString(), price, fromDate, toDate, vehicleClass,
                                                                                pickupLatitude, pickupLongitude, returnLatitude, returnLongitude));
+
+        newBookingJson = {
+            {"company", company},
+            {"customerId", customerId},
+            {"customerName", interface->findCustomer(customerId)->getName()},
+            {"fromDate", fromDate},
+            {"id", newId.toStdString()},
+            {"pickupLatitude", pickupLatitude},
+            {"pickupLocation", pickupLocation},
+            {"pickupLongitude", pickupLongitude},
+            {"price", price},
+            {"returnLatitude", returnLatitude},
+            {"returnLocation", returnLocation},
+            {"returnLongitude", returnLongitude},
+            {"toDate", toDate},
+            {"travelId", travelId},
+            {"type", "RentalCar"},
+            {"vehicleClass", vehicleClass}
+        };
     }
 
     /*Eingegebene Reise schon bereits existiert*/
@@ -920,6 +1085,24 @@ void MainWindow::on_BuchungAnlegen_clicked()
 
         interface->findCustomer(customerId)->addTravel(newTravel);
     }
+
+    // Hinzufügen des neuen Objekts zum Array
+    allBookingsJson.push_back(newBookingJson);
+
+    //Sortieren
+    sortJson(this, allBookingsJson);
+
+
+    // Speichern des aktualisierten Arrays in die JSON-Datei
+    std::ofstream jsonFileOut(currentFilename.toStdString());
+    if (!jsonFileOut.is_open()) {
+        QMessageBox::critical(this, "Fehler!", "Fehler beim Öffnen der JSON-Datei zum Schreiben.");
+            return;
+    }
+
+    jsonFileOut << allBookingsJson.dump(4); // Optional: dump(4) für eine formatierte Ausgabe mit Einrückung von 4 Leerzeichen
+    jsonFileOut.close();
+
 
     /*Alle GroupBoxes einblenden*/
     ui->groupBox->setVisible(true);
@@ -963,9 +1146,38 @@ void MainWindow::on_BuchungAnlegen_clicked()
     ui->CarLantitudeToDest->setVisible(false);
     ui->CarLongitudeToDest->setVisible(false);
 
-    /*Tabs in Buchungsdetails*/
+    /*Buchungsdetails*/
     ui->tabWidget->setTabVisible(0,false);
     ui->tabWidget->setTabVisible(1,false);
     ui->tabWidget->setTabVisible(2,false);
+
+    QMessageBox::information(this, "Erfolgreich!", "Neue Buchung ist erfolgreich gespeichert!");
+}
+
+
+void MainWindow::on_actionBuchungen_sortieren_triggered()
+{
+    // Laden der JSON-Datei
+    std::ifstream jsonFileIn(currentFilename.toStdString());
+    if (!jsonFileIn.is_open()) {
+        QMessageBox::critical(this, "Fehler!", "Fehler beim Öffnen der JSON-Datei.");
+        return;
+    }
+    nlohmann::json json;
+    jsonFileIn >> json;
+    jsonFileIn.close();
+
+    //Sortieren
+    sortJson(this, json);
+
+    /***Speichern in Json***/
+    std::ofstream jsonFileOut(currentFilename.toStdString());
+    if (!jsonFileOut.is_open()) {
+        QMessageBox::critical(this, "Fehler!", "Fehler beim Öffnen der JSON-Datei zum Schreiben.");
+            return;
+    }
+
+    jsonFileOut << json.dump(4); // Optional: dump(4) für eine formatierte Ausgabe mit Einrückung von 4 Leerzeichen
+    jsonFileOut.close();
 }
 

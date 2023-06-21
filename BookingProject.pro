@@ -51,5 +51,4 @@ DISTFILES += \
     ../../../Users/User/Desktop/bookingsPraktikum3.json \
     ../../../Users/User/Desktop/bookingsPraktikum4.json \
     ../../Users/User/Desktop/bookingsPraktikum2.json \
-    geo.json \
     iatacodes.json

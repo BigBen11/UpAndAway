@@ -416,7 +416,7 @@
         </size>
        </property>
        <property name="currentIndex">
-        <number>0</number>
+        <number>2</number>
        </property>
        <widget class="QWidget" name="Flug">
         <attribute name="title">
@@ -806,7 +806,7 @@
      <x>0</x>
      <y>0</y>
      <width>1164</width>
-     <height>25</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuDatei">
@@ -828,6 +828,7 @@
      <string>Buchungen</string>
     </property>
     <addaction name="actionNeue_Buchung_anlegen"/>
+    <addaction name="actionBuchungen_sortieren"/>
    </widget>
    <addaction name="menuDatei"/>
    <addaction name="menuKund_innen"/>
@@ -870,6 +871,11 @@
   <action name="actionKund_innensuche">
    <property name="text">
     <string>Kund*innensuche...</string>
+   </property>
+  </action>
+  <action name="actionBuchungen_sortieren">
+   <property name="text">
+    <string>Buchungen sortieren...</string>
    </property>
   </action>
  </widget>

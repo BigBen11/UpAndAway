@@ -198,8 +198,6 @@ void TravelAgency::readFile(const std::string& filePath) {
         customer->setTravelList(tmpTravels);
 
         tmpTravels.clear();
-
-        //std::cout << customer->getTravelList().size() << std::endl;
     }
 
 }

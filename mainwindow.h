@@ -82,6 +82,8 @@ private slots:
 
     void on_BuchungAnlegen_clicked();
 
+    void on_actionBuchungen_sortieren_triggered();
+
 private:
     Ui::MainWindow *ui;
     std::shared_ptr<TravelAgency> interface;
