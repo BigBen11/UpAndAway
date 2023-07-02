@@ -6,7 +6,8 @@
 class FlightBooking : public Booking
 {
 public:
-    FlightBooking(int travelId, std::string type, std::string fromDestination, std::string toDestination, std::string airline,
+    FlightBooking(int travelId, std::string type, std::string fromDestination, std::string toDestination, std::string predecessor1, std::string predecessor2,
+                  std::string airline,
                   std::string id, double price, std::string fromDate, std::string toDate, std::string bookingClass,
                   std::string fromDestLatitude, std::string fromDestLongitude, std::string toDestLatitude, std::string toDestLongitude);
 

@@ -22,6 +22,8 @@ public:
 
     void readFile(const std::string& filePath);
 
+    std::string abcAnalyse();
+
     std::string getInfo();
 
     void addBooking(std::shared_ptr<Booking> pBooking);

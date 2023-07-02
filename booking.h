@@ -6,7 +6,7 @@
 class Booking
 {
 public:
-    Booking(int travelId, std::string type, std::string id, double price, std::string fromDate, std::string toDate);
+    Booking(int travelId, std::string type, std::string id, double price, std::string fromDate, std::string toDate, std::string predecessor1, std::string predecessor2);
     virtual ~Booking() = default;
     virtual std::string getDetails() = 0;
     std::string getId(){return id;};
@@ -40,6 +40,10 @@ public:
 
     void setPrice(double newPrice);
 
+    std::string getPredecessor1() const;
+
+    std::string getPredecessor2() const;
+
 private:
     std::string id;
     double price;
@@ -47,6 +51,8 @@ private:
     std::string toDate;
     std::string type;
     int travelId;
+    std::string predecessor1;
+    std::string predecessor2;
 };
 
 

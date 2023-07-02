@@ -19,3 +19,13 @@ std::string Customer::getName() const
 {
     return name;
 }
+
+void Customer::setTotalBookingsPreis(double newTotalBookingsPreis)
+{
+    totalBookingsPreis = newTotalBookingsPreis;
+}
+
+double Customer::getTotalBookingsPreis() const
+{
+    return totalBookingsPreis;
+}

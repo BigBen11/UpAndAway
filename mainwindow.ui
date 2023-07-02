@@ -806,7 +806,7 @@
      <x>0</x>
      <y>0</y>
      <width>1164</width>
-     <height>21</height>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuDatei">
@@ -822,6 +822,7 @@
     </property>
     <addaction name="actionNeue_Kunde_anlegen"/>
     <addaction name="actionKund_innensuche"/>
+    <addaction name="actionABC_Analyse"/>
    </widget>
    <widget class="QMenu" name="menuBuchungen">
     <property name="title">
@@ -830,9 +831,16 @@
     <addaction name="actionNeue_Buchung_anlegen"/>
     <addaction name="actionBuchungen_sortieren"/>
    </widget>
+   <widget class="QMenu" name="menuReisen">
+    <property name="title">
+     <string>Reisen</string>
+    </property>
+    <addaction name="actionReisen_pr_fen"/>
+   </widget>
    <addaction name="menuDatei"/>
    <addaction name="menuKund_innen"/>
    <addaction name="menuBuchungen"/>
+   <addaction name="menuReisen"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionEinlesen">
@@ -876,6 +884,16 @@
   <action name="actionBuchungen_sortieren">
    <property name="text">
     <string>Buchungen sortieren...</string>
+   </property>
+  </action>
+  <action name="actionReisen_pr_fen">
+   <property name="text">
+    <string>Reisen prüfen...</string>
+   </property>
+  </action>
+  <action name="actionABC_Analyse">
+   <property name="text">
+    <string>ABC-Analyse...</string>
    </property>
   </action>
  </widget>

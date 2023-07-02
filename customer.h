@@ -20,10 +20,15 @@ public:
 
     std::string getName() const;
 
+    void setTotalBookingsPreis(double newTotalBookingsPreis);
+
+    double getTotalBookingsPreis() const;
+
 private:
     int id;
     std::string name;
     std::vector<std::shared_ptr<Travel>> travelList;
+    double totalBookingsPreis = 0;
 
 };
 

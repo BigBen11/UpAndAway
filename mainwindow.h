@@ -32,6 +32,9 @@ public:
     ~MainWindow();
 
     void setCustomerInfo(std::shared_ptr<Customer> customer);
+    void sortJson(QWidget* parent, nlohmann::json& json);
+
+    std::shared_ptr<TravelAgency> static getInterface();
 
 private slots:
     void on_actionEinlesen_triggered();
@@ -83,6 +86,10 @@ private slots:
     void on_BuchungAnlegen_clicked();
 
     void on_actionBuchungen_sortieren_triggered();
+
+    void on_actionReisen_pr_fen_triggered();
+
+    void on_actionABC_Analyse_triggered();
 
 private:
     Ui::MainWindow *ui;

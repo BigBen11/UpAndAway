@@ -1,9 +1,9 @@
 #include "hotelbooking.h"
 
-HotelBooking::HotelBooking(int travelId, std::string type, std::string hotel, std::string town,
+HotelBooking::HotelBooking(int travelId, std::string type, std::string predecessor1, std::string predecessor2, std::string hotel, std::string town,
                            std::string id, double price, std::string fromDate, std::string toDate, std::string roomType,
                            std::string hotelLatitude, std::string hotelLongitude)
-    :Booking(travelId, type, id, price, fromDate, toDate), hotel(hotel), town(town), roomType(roomType),
+    :Booking(travelId, type, id, price, fromDate, toDate, predecessor1, predecessor2), hotel(hotel), town(town), roomType(roomType),
      hotelLatitude(hotelLatitude), hotelLongitude(hotelLongitude)
 {
 

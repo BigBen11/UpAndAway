@@ -5,6 +5,7 @@
 #include "errorwindow.h"
 #include <fstream>
 
+
 #include <QDate>
 #include <QInputDialog>
 #include <QTableWidget>
@@ -239,8 +240,17 @@ void MainWindow::on_tableWidget_itemDoubleClicked(QTableWidgetItem *item)
 
             item = new QTableWidgetItem;
 
-            if(column == 0)
-                item->setText(QString::fromStdString(travel->getTravelBookings()[row]->getType()));
+            if(column == 0){
+                std::string bookingType = travel->getTravelBookings()[row]->getType();
+                if(bookingType == "Flight"){
+                    item->setText("✈️");
+                }else if(bookingType == "Hotel"){
+                    item->setText("🛏️");
+                }else if(bookingType == "RentalCar"){
+                    item->setText("🚘");
+                }
+
+            }
 
             if(column == 1)
                 item->setText(QString::fromStdString(travel->getTravelBookings()[row]->getFromDate()));
@@ -361,11 +371,11 @@ void MainWindow::on_tableWidget_2_itemDoubleClicked(QTableWidgetItem *item)
 
 }
 
-void sortJson(QWidget* parent, nlohmann::json& json){
+void MainWindow::sortJson(QWidget* parent, nlohmann::json& json){
     QStringList items = {"Price" , "From Date", "To Date", "Travel ID"};
     QString item = QInputDialog::getItem(parent, "Sortieren...", "Wählen Sie das passende Sortierkriterium:", items);
 
-        if(item == "Price"){
+    if(item == "Price"){
         std::sort(json.begin(), json.end(), [](const nlohmann::json& a, const nlohmann::json& b) {
             return a["price"] < b["price"];
         });
@@ -969,7 +979,7 @@ void MainWindow::on_BuchungAnlegen_clicked()
         std::string toDestLatitude = ui->FlightLatitudeToDest->text().toStdString();
         std::string toDestLongitude = ui->FlightLongitueTODest->text().toStdString();
 
-        pBooking = std::make_shared<FlightBooking>(FlightBooking(travelId, "Flight", fromDestCode, toDestCode, airline,
+        pBooking = std::make_shared<FlightBooking>(FlightBooking(travelId, "Flight", fromDestCode, toDestCode,"","", airline,
                                                                  newId.toStdString(), price, fromDate, toDate, bookingClass,
                                                                  fromDestLatitude, fromDestLongitude, toDestLatitude, toDestLongitude));
 
@@ -1015,7 +1025,7 @@ void MainWindow::on_BuchungAnlegen_clicked()
             roomType = "Falsche Eingabe!";
         }
 
-        pBooking = std::make_shared<HotelBooking>(HotelBooking(travelId, "Hotel", hotel, town, newId.toStdString(), price, fromDate, toDate,
+        pBooking = std::make_shared<HotelBooking>(HotelBooking(travelId, "Hotel","","", hotel, town, newId.toStdString(), price, fromDate, toDate,
                                                                roomType, hotelLatitude, hotelLongitude));
 
 
@@ -1047,7 +1057,7 @@ void MainWindow::on_BuchungAnlegen_clicked()
         std::string company = ui->Firma->text().toStdString();
         std::string vehicleClass = ui->Fahrzeugklasse->text().toStdString();
 
-        pBooking = std::make_shared<RentalCarReservation>(RentalCarReservation(travelId, "RentalCar", pickupLocation, returnLocation, company,
+        pBooking = std::make_shared<RentalCarReservation>(RentalCarReservation(travelId, "RentalCar","","", pickupLocation, returnLocation, company,
                                                                                newId.toStdString(), price, fromDate, toDate, vehicleClass,
                                                                                pickupLatitude, pickupLongitude, returnLatitude, returnLongitude));
 
@@ -1179,5 +1189,60 @@ void MainWindow::on_actionBuchungen_sortieren_triggered()
 
     jsonFileOut << json.dump(4); // Optional: dump(4) für eine formatierte Ausgabe mit Einrückung von 4 Leerzeichen
     jsonFileOut.close();
+}
+
+
+void MainWindow::on_actionReisen_pr_fen_triggered()
+{
+    QStringList items;
+
+    for(auto travel: interface->getAllTravels()){
+            items.push_back(QString::number(travel->getId()));
+    }
+
+    QString item = QInputDialog::getItem(this, "Prüfen...", "Wählen Sie die zu prüfende Reise: ", items);
+
+    auto travel = interface->findTravel(item.toInt());
+
+    QString roundTrip = "No Data";
+    QString enoughHotels = "No Data";
+    QString noUselessHotels = "No Data";
+    QString noUselessRentalCars = "No Data";
+
+    if(travel->checkRoundtrip()){
+        roundTrip = "✅";
+    }else{
+        roundTrip = "❌";
+    }
+
+    if(travel->checkEnoughHotels()){
+        enoughHotels = "✅";
+    }else{
+        enoughHotels = "❌";
+    }
+
+    if(travel->checkNoUselessHotels()){
+        noUselessHotels = "✅";
+    }else{
+        noUselessHotels = "❌";
+    }
+
+    if(travel->checkNoUselessRentalCars()){
+        noUselessRentalCars = "✅";
+    }else{
+        noUselessRentalCars = "❌";
+    }
+
+    QMessageBox::information(this, "Ergebnisse für die Reise " + item,
+                              "Rundreise: " + roundTrip + "\n"
+                            + "Genug Hotels: " + enoughHotels + "\n"
+                            + "Kein überflüssiges Hotel: " + noUselessHotels + "\n"
+                            + "Kein überflüssiger Mietwagen: " + noUselessRentalCars);
+}
+
+
+void MainWindow::on_actionABC_Analyse_triggered()
+{
+    QMessageBox::information(this, "ABC-Analyse", QString::fromStdString(interface->abcAnalyse()));
 }
 

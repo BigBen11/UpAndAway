@@ -4,7 +4,7 @@
 Test::Test(QObject *parent)
     : QObject{parent}
 {
-    travelAgency.readFile("C:/Users/User/Desktop/BookingsPraktikum4.json");
+    travelAgency.readFile("C:/ProjectsQt/UpAndAway/upandaway/BookingsPraktikum5.json");
 }
 
 void Test::testReantalCarReservation(){
@@ -29,7 +29,7 @@ void Test::testFlightBooking(){
         }
     }
 
-    QCOMPARE(cnt, 3);
+    QCOMPARE(cnt, 4);
 
 }
 

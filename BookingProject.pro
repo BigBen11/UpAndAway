@@ -22,7 +22,8 @@ SOURCES += \
     test.cpp \
     travel.cpp \
     travelagency.cpp \
-    travelagencyui.cpp
+    travelagencyui.cpp \
+    algorithmen.cpp
 
 HEADERS += \
     airport.h \
@@ -36,7 +37,8 @@ HEADERS += \
     test.h \
     travel.h \
     travelagency.h \
-    travelagencyui.h
+    travelagencyui.h \
+    graph.h
 
 FORMS += \
     errorwindow.ui \
@@ -51,4 +53,5 @@ DISTFILES += \
     ../../../Users/User/Desktop/bookingsPraktikum3.json \
     ../../../Users/User/Desktop/bookingsPraktikum4.json \
     ../../Users/User/Desktop/bookingsPraktikum2.json \
+    bookingsPraktikum5.json \
     iatacodes.json

@@ -8,7 +8,7 @@ TravelAgency::TravelAgency()
     std::ifstream fileInput("C:/ProjectsQt/UpAndAway/upandaway/iatacodes.json");
 
     if (!fileInput.is_open()) {
-        std::cerr << "Failed to open file\n";
+        std::cerr << "Failed to open iatacodes.json\n";
         exit(-1);
     }
 
@@ -116,35 +116,42 @@ void TravelAgency::readFile(const std::string& filePath) {
 
     /*BOOKINGS SPEICHERN*/
     for (const auto& booking : fileJson) {
-
-
-
             std::shared_ptr<Booking> pBooking = nullptr;
+
+            std::string predecessor1 = "";
+            std::string predecessor2 = "";
+
+            if(booking.find("predecessor1") != booking.end()){
+                predecessor1 = booking["predecessor1"];
+            }
+            if(booking.find("predecessor2") != booking.end()){
+                predecessor2 = booking["predecessor2"];
+            }
 
             if (booking["type"] == "Flight") {
                 pBooking = std::make_shared<FlightBooking> (FlightBooking(booking["travelId"], booking["type"], booking["fromDest"], booking["toDest"],
+                    predecessor1, predecessor2,
                     booking["airline"], booking["id"], booking["price"],
                     booking["fromDate"], booking["toDate"], booking["bookingClass"],
                     booking["fromDestLatitude"], booking["fromDestLongitude"],
                     booking["toDestLatitude"], booking["toDestLongitude"]));
 
             } else if (booking["type"] == "RentalCar") {
-                pBooking = std::make_shared<RentalCarReservation>(RentalCarReservation(booking["travelId"], booking["type"], booking["pickupLocation"], booking["returnLocation"],
+                pBooking = std::make_shared<RentalCarReservation>(RentalCarReservation(booking["travelId"], booking["type"], predecessor1, predecessor2,
+                    booking["pickupLocation"], booking["returnLocation"],
                     booking["company"], booking["id"], booking["price"],
                     booking["fromDate"], booking["toDate"], booking["vehicleClass"],
                     booking["pickupLatitude"], booking["pickupLongitude"],
                     booking["returnLatitude"], booking["returnLongitude"]));
 
             } else if (booking["type"] == "Hotel") {
-                pBooking = std::make_shared<HotelBooking>(HotelBooking(booking["travelId"], booking["type"], booking["hotel"], booking["town"],
+                pBooking = std::make_shared<HotelBooking>(HotelBooking(booking["travelId"], booking["type"], predecessor1, predecessor2,
+                    booking["hotel"], booking["town"],
                     booking["id"], booking["price"], booking["fromDate"], booking["toDate"], booking["roomType"],
                     booking["hotelLatitude"], booking["hotelLongitude"]));
-
             }
 
             allBookings.push_back(pBooking);
-
-
     }
 
     /*TRAVELS*/
@@ -188,10 +195,13 @@ void TravelAgency::readFile(const std::string& filePath) {
     /*TRAVELS FÜR CUSTOMERS*/
     for (const auto& customer: allCustomers){
         std::vector <std::shared_ptr<Travel>> tmpTravels;
+        double totalSum = 0;
 
         for(const auto& travel: allTravels){
             if(travel->getCustomerId() == customer->getId()){
                 tmpTravels.push_back(travel);
+
+
             }
         }
 
@@ -200,6 +210,71 @@ void TravelAgency::readFile(const std::string& filePath) {
         tmpTravels.clear();
     }
 
+}
+
+std::string TravelAgency::abcAnalyse()
+{
+
+    for(const auto& customer: allCustomers){
+        double totalSumCustomer = 0;
+
+        for(const auto& travel: customer->getTravelList()){
+            for(const auto& booking: travel->getTravelBookings()){
+                totalSumCustomer += booking->getPrice();
+            }
+        }
+
+        customer->setTotalBookingsPreis(totalSumCustomer);
+    }
+
+    std::sort(allCustomers.begin(), allCustomers.end(), [](std::shared_ptr<Customer> a, std::shared_ptr<Customer> b){
+        return a->getTotalBookingsPreis() <= b->getTotalBookingsPreis();
+    });
+
+    int customersNum = allCustomers.size();
+    int customerNum_A = customersNum * 0.8;// 80%
+    int customerNum_B = customersNum * 0.1;// 10%
+    int customerNum_C = customersNum * 0.1;// 10%
+
+    if(customerNum_A+customerNum_B+customerNum_C != customersNum){
+        customerNum_A++;
+    }
+
+    double totalSum_A = 0;
+    double totalSum_B = 0;
+    double totalSum_C = 0;
+
+    int i = 0;
+    for(i; i < customerNum_A; i++){
+        totalSum_A += allCustomers[i]->getTotalBookingsPreis();
+    }
+    for(i; i < customerNum_A + customerNum_B; i++){
+        totalSum_B += allCustomers[i]->getTotalBookingsPreis();
+    }
+    for(i; i < customerNum_A + customerNum_B + customerNum_C; i++){
+        totalSum_C += allCustomers[i]->getTotalBookingsPreis();
+    }
+
+    double averageSumCustomer_A = totalSum_A / customerNum_A;
+    double averageSumCustomer_B = totalSum_B / customerNum_B;
+    double averageSumCustomer_C = totalSum_C / customerNum_C;
+
+
+    std::string abc = "Kategorie A (Top 80% der Kunden, 80% des Umsatzes):\n";
+    abc += "\tKundenanzahl: " + std::to_string(customerNum_A) + "\n";
+    abc += "\tGesamtumsatz dieser Kunden: " + std::to_string(totalSum_A) + " €\n";
+    abc += "\tDurchschnittlicher Umsatz pro Kunde: " + std::to_string(averageSumCustomer_A) + " €\n";
+    abc += "Kategorie B (Mittlere 10% der Kunden, 10% des Umsatzes):\n";
+    abc += "\tKundenanzahl: " + std::to_string(customerNum_B) + "\n";
+    abc += "\tGesamtumsatz dieser Kunden: " + std::to_string(totalSum_B) + " €\n";
+    abc += "\tDurchschnittlicher Umsatz pro Kunde: " + std::to_string(averageSumCustomer_B) + " €\n";
+    abc += "Kategorie C (Untere 10% der Kunden, 10% des Umsatzes):\n";
+    abc += "\tKundenanzahl: " + std::to_string(customerNum_C) + "\n";
+    abc += "\tGesamtumsatz dieser Kunden: " + std::to_string(totalSum_C) + " €\n";
+    abc += "\tDurchschnittlicher Umsatz pro Kunde: " + std::to_string(averageSumCustomer_C) + " €\n";
+
+
+    return abc;
 }
 
 std::string TravelAgency::getInfo(){
