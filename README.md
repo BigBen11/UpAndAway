@@ -1,3 +1,3 @@
 # UpAndAway
 
-Bookings system with qt framework GUI
+Bookings system with QT
